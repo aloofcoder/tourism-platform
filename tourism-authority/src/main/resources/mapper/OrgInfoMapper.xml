@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.authority.mapper.OrgInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.OrgInfo">
+        <id column="org_id" property="orgId" />
+        <result column="parent_id" property="parentId" />
+        <result column="org_name" property="orgName" />
+        <result column="org_admin" property="orgAdmin" />
+        <result column="org_class" property="orgClass" />
+        <result column="org_sort" property="orgSort" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="create_user" property="createUser" />
+        <result column="edit_user" property="editUser" />
+        <result column="create_time" property="createTime" />
+        <result column="edit_time" property="editTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, org_name, org_admin, org_class, org_sort, status, remark, create_user, edit_user, create_time, edit_time
+    </sql>
+
+    <resultMap id="QueryOrgInfoResultMap" type="net.le.tourism.authority.pojo.vo.QueryOrgInfoVo">
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="org_admin" property="orgAdmin"/>
+        <result column="org_sort" property="orgSort"/>
+        <result column="org_class" property="orgClass"/>
+        <result column="status" property="status"/>
+        <collection column="org_id" property="children" javaType="ArrayList"
+                    ofType="net.le.tourism.authority.pojo.vo.QueryOrgInfoVo" select="querySubOrgInfo"/>
+    </resultMap>
+
+    <select id="queryOrgInfo" resultMap="QueryOrgInfoResultMap">
+        SELECT
+            oi.parent_id,
+            o.org_name parent_name,
+            oi.org_id,
+            oi.org_name,
+            oi.org_admin,
+            oi.org_sort,
+            oi.org_class,
+            oi.status
+        FROM
+            org_info oi
+        LEFT JOIN org_info o ON oi.parent_id = o.org_id
+        WHERE
+            oi.status = 0
+            <!--
+                <if test="dto != null and dto.condition != null and dto.condition != ''">
+                    AND
+                    CONCAT(IFNULL(oi.org_name, ''), IFNULL(oi.org_admin, ''))
+                    LIKE CONCAT('%', #{dto.condition}, '%')
+                </if>
+            -->
+            AND oi.org_id = #{orgId}
+            order by oi.org_sort
+    </select>
+
+    <select id="querySubOrgInfo" resultMap="QueryOrgInfoResultMap">
+        SELECT
+        oi.parent_id,
+        o.org_name parent_name,
+        oi.org_id,
+        oi.org_name,
+        oi.org_admin,
+        oi.org_sort,
+        oi.org_class,
+        oi.status
+        FROM
+        org_info oi
+        LEFT JOIN org_info o ON oi.parent_id = o.org_id
+        WHERE
+        oi.status = 0
+        AND oi.parent_id = #{parentId}
+        order by oi.org_sort
+    </select>
+</mapper>

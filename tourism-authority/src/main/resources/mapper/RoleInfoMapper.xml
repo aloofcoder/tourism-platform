@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.authority.mapper.RoleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.RoleInfo">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_desc" property="roleDesc"/>
+        <result column="role_sort" property="roleSort"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_user" property="createUser"/>
+        <result column="edit_user" property="editUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="edit_time" property="editTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id, role_name, role_desc, role_sort, status, remark, create_user, edit_user, create_time, edit_time
+    </sql>
+
+    <resultMap id="QueryRoleInfoResultMap" type="net.le.tourism.authority.pojo.vo.QueryRoleInfoVo">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_desc" property="roleDesc"/>
+        <result column="role_sort" property="roleSort"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="queryRoleInfo" parameterType="net.le.tourism.authority.pojo.dto.QueryRoleInfoDto"
+            resultMap="QueryRoleInfoResultMap">
+        SELECT role_id, role_name, role_desc, role_sort, status, remark FROM role_info
+        WHERE 1
+        <if test="dto.condition != null and dto.condition != ''">
+            AND (role_name LIKE CONCAT('%', #{dto.condition}, '%'))
+        </if>
+    </select>
+</mapper>

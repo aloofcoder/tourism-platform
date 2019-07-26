@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.authority.mapper.LoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.LoginLog">
+        <id column="login_log_id" property="loginLogId" />
+        <result column="admin_num" property="adminNum" />
+        <result column="login_time" property="loginTime" />
+        <result column="logout_time" property="logoutTime" />
+        <result column="duration_time" property="durationTime" />
+        <result column="login_ip" property="loginIp" />
+        <result column="status" property="status" />
+        <result column="opeating_sys" property="opeatingSys" />
+        <result column="login_num" property="loginNum" />
+        <result column="login_pwd" property="loginPwd" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        login_log_id, admin_num, login_time, logout_time, duration_time, login_ip, status, opeating_sys, login_num, login_pwd
+    </sql>
+
+</mapper>

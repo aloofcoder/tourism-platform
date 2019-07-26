@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.authority.mapper.AdminInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.AdminInfo">
+        <id column="admin_id" property="adminId" />
+        <result column="admin_num" property="adminNum"/>
+        <result column="admin_name" property="adminName" />
+        <result column="login_name" property="loginName" />
+        <result column="admin_pwd" property="adminPwd" />
+        <result column="salt" property="salt" />
+        <result column="admin_mobile" property="adminMobile" />
+        <result column="admin_email" property="adminEmail" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="create_user" property="createUser" />
+        <result column="edit_user" property="editUser" />
+        <result column="create_time" property="createTime" />
+        <result column="edit_time" property="editTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        admin_id, admin_num, admin_name, login_name, admin_pwd, salt, admin_mobile, admin_email, status, remark, create_user, edit_user, create_time, edit_time
+    </sql>
+
+
+    <resultMap id="QueryAdminInInfoResultMap" type="net.le.tourism.authority.pojo.vo.QueryAdminInfoVo">
+        <result column="admin_id" property="adminId"/>
+        <result column="admin_num" property="adminNum"/>
+        <result column="admin_name" property="adminName"/>
+        <result column="login_name" property="loginName"/>
+        <result column="admin_mobile" property="adminMobile"/>
+        <result column="admin_email" property="adminEmail"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="admin_roles" property="adminRoles"/>
+    </resultMap>
+
+    <select id="queryAdminInInfo" resultMap="QueryAdminInInfoResultMap">
+        SELECT
+        ai.admin_id,
+        ai.admin_num,
+        ai.admin_name,
+        ai.login_name,
+        ai.admin_mobile,
+        ai.admin_email,
+        ai.status,
+        ai.remark,
+        t.admin_roles
+        FROM
+        admin_info ai
+        LEFT JOIN (
+            SELECT
+            ra.admin_id,
+            group_concat(ri.role_name) admin_roles
+            FROM
+            role_admin ra
+            LEFT JOIN role_info ri ON ra.role_id = ri.role_id
+            GROUP BY
+            ra.admin_id
+        ) t ON ai.admin_id = t.admin_id
+        WHERE 1
+        AND ai.status != 2
+        <if test="dto.condition != null and dto.condition != ''">
+            AND
+            CONCAT(IFNULL(ai.admin_name, ''), IFNULL(ai.admin_mobile, ''), IFNULL(ai.admin_email, ''))
+            LIKE CONCAT('%', #{dto.condition}, '%')
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.authority.mapper.RoleAdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.RoleAdmin">
+        <id column="id" property="id"/>
+        <result column="role_id" property="roleId" />
+        <result column="admin_id" property="adminId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, role_id, admin_id
+    </sql>
+    
+    <insert id="insertRoleAdminByAdmin">
+        INSERT INTO role_admin
+        (role_id, admin_id)
+        VALUES
+        <foreach collection="roleIds" item="item" separator="," index="index">
+            (#{item}, #{adminId})
+        </foreach>
+    </insert>
+
+    <select id="selectRoleIdByAdminId" resultType="integer" parameterType="integer">
+        SELECT role_id FROM role_admin WHERE admin_id = #{adminid}
+    </select>
+
+</mapper>
