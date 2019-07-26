@@ -18,10 +18,6 @@
         <module>tourism-authority</module>
     </modules>
 
-    <modules>
-        <module>tourism-authority</module>
-    </modules>
-
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
