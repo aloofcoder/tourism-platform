@@ -121,7 +121,7 @@
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
-                            <directory>tourism-authority/${project.build.directory}</directory>
+                            <directory>${project.build.directory}</directory>
                             <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
