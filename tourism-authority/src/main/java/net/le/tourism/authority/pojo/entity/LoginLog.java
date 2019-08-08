@@ -40,40 +40,13 @@ private static final long serialVersionUID=1L;
     private Date loginTime;
 
     /**
-     * 登出时间
-     */
-    private Date logoutTime;
-
-    /**
-     * 在线时长,单位秒
-     */
-    private Long durationTime;
-
-    /**
      * 登录ip
      */
     private String loginIp;
 
-    /**
-     * 登录状态
-     */
     private Integer status;
 
-    /**
-     * 登录系统
-     */
-    private String opeatingSys;
-
-    /**
-     * 登录账号
-     */
-    private String loginNum;
-
-    /**
-     * 登录密码
-     */
-    private String loginPwd;
-
+    private String loginResult;
 
     @Override
     protected Serializable pkVal() {

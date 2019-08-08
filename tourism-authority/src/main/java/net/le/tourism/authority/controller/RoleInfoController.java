@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import net.le.tourism.authority.pojo.dto.EditRoleInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertRoleInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryRoleInfoDto;
+import net.le.tourism.authority.pojo.vo.QueryCompleteRoleInfoVo;
 import net.le.tourism.authority.pojo.vo.QueryRoleInfoVo;
 import net.le.tourism.authority.result.CommonResult;
 import net.le.tourism.authority.result.PageResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>
@@ -32,6 +34,14 @@ public class RoleInfoController {
 
     @Autowired
     private IRoleInfoService roleInfoService;
+
+    @ApiOperation(value = "查询全部角色信息")
+    @GetMapping("/complete")
+    public CommonResult queryCompleteRoleInfo() {
+        List<QueryCompleteRoleInfoVo> list = roleInfoService.queryCompleteRoleInfo();
+        return new CommonResult(list);
+    }
+
 
     @ApiOperation(value = "查询角色信息", notes = "分页查询所有角色信息")
     @GetMapping

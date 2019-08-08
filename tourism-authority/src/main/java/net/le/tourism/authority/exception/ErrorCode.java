@@ -49,7 +49,8 @@ public enum ErrorCode {
     authority_un_login(40201, "你当前未登录，请登录！"),
     authority_login_user_un_register(40202, "登录失败，登录账号不存在！"),
     authority_login_info_error(40203, "登录失败，登录密码错误！"),
-    authority_login_token_Invalid(40204, "登录已过期，请重新登录！"),;
+    authority_login_token_Invalid(40204, "登录已过期，请重新登录！"),
+    authority_login_Info_Invalid(40205, "登录账号信息有误，请联系管理员处理！"),;
 
     private Integer code;
 

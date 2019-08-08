@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.le.tourism.authority.pojo.dto.QueryRoleInfoDto;
 import net.le.tourism.authority.pojo.entity.RoleInfo;
+import net.le.tourism.authority.pojo.vo.QueryCompleteRoleInfoVo;
 import net.le.tourism.authority.pojo.vo.QueryRoleInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,6 @@ import java.util.List;
 public interface RoleInfoMapper extends BaseMapper<RoleInfo> {
 
     List<QueryRoleInfoVo> queryRoleInfo(Page page, @Param("dto") QueryRoleInfoDto queryRoleInfoDto);
+
+    List<QueryCompleteRoleInfoVo> queryCompleteRoleInfo();
 }

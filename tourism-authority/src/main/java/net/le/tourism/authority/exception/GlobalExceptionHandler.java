@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppServiceException.class)
     public CommonResult AppServiceException(AppServiceException e) {
         e.printStackTrace();
-        log.error("代码执行出错，{}！", e.getMessage());
+        log.error("自定义异常：{}！", e.getMessage());
         return new CommonResult(e.getErrorCode(), e.getMessage());
     }
 

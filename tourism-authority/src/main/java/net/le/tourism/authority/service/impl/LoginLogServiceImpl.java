@@ -8,6 +8,7 @@ import net.le.tourism.authority.service.ILoginLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.le.tourism.authority.util.BaseContextUtils;
 import net.le.tourism.authority.util.ServletUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,14 +24,18 @@ import java.util.Date;
 @Service
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
 
+    @Autowired
+    private LoginLogMapper loginLogMapper;
 
     @Override
-    public void addLoginLog(InsertLoginLogDto insertLoginLogDto) {
-        String loginNum = BaseContextUtils.get(Constants.LOGIN_NUM).toString();
+    public void addLoginLog(String loginNum, Integer status, String loginResult) {
         LoginLog entity = new LoginLog();
         entity.setAdminNum(loginNum);
         entity.setLoginTime(new Date());
         String loginIp = ServletUtils.getIpAddr();
         entity.setLoginIp(loginIp);
+        entity.setStatus(status);
+        entity.setLoginResult(loginResult);
+        loginLogMapper.insert(entity);
     }
 }

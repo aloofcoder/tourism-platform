@@ -3,6 +3,8 @@ package net.le.tourism.authority.pojo.dto;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * @author hanle
  * @version v1.0
@@ -22,4 +24,6 @@ public class TokenDto {
     private String adminName;
 
     private String token;
+
+    private Integer orgId;
 }

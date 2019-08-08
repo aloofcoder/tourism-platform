@@ -7,18 +7,14 @@
         <id column="login_log_id" property="loginLogId" />
         <result column="admin_num" property="adminNum" />
         <result column="login_time" property="loginTime" />
-        <result column="logout_time" property="logoutTime" />
-        <result column="duration_time" property="durationTime" />
         <result column="login_ip" property="loginIp" />
-        <result column="status" property="status" />
-        <result column="opeating_sys" property="opeatingSys" />
-        <result column="login_num" property="loginNum" />
-        <result column="login_pwd" property="loginPwd" />
+        <result column="status" property="status"/>
+        <result column="login_result" property="loginResult"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        login_log_id, admin_num, login_time, logout_time, duration_time, login_ip, status, opeating_sys, login_num, login_pwd
+        login_log_id, admin_num, login_time, login_ip, status, login_result
     </sql>
 
 </mapper>
