@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.le.tourism.authority.pojo.dto.QueryFileInfoDto;
 import net.le.tourism.authority.pojo.entity.FileInfo;
 import net.le.tourism.authority.pojo.vo.QueryFileInfoVo;
-import net.le.tourism.authority.result.PageResult;
+import net.le.tourism.authority.common.result.PageResult;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

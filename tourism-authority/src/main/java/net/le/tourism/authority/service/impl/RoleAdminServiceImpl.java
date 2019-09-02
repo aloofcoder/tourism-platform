@@ -1,14 +1,12 @@
 package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.mapper.RoleAdminMapper;
 import net.le.tourism.authority.pojo.entity.RoleAdmin;
 import net.le.tourism.authority.service.IRoleAdminService;
+import net.le.tourism.authority.mapper.RoleAdminMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -1,9 +1,9 @@
 package net.le.tourism.authority.service;
 
 import com.alibaba.fastjson.JSON;
-import net.le.tourism.authority.constant.Constants;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.util.BaseContextUtils;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
-import net.le.tourism.authority.util.BaseContextUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author hanle
  * @version v1.0
  * @date 2019/6/29
- * @modify
- *
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * @modify 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

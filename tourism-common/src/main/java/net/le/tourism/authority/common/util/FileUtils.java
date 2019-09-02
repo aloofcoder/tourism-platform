@@ -1,7 +1,7 @@
-package net.le.tourism.authority.util;
+package net.le.tourism.common.util;
 
-import net.le.tourism.authority.exception.AppServiceException;
-import net.le.tourism.authority.exception.ErrorCode;
+import net.le.tourism.common.exception.AppServiceException;
+import net.le.tourism.common.exception.ErrorCode;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -1,8 +1,8 @@
 package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.le.tourism.authority.mapper.OrgAdminMapper;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
+import net.le.tourism.authority.mapper.OrgAdminMapper;
 import net.le.tourism.authority.service.IOrgAdminService;
 import org.springframework.stereotype.Service;
 

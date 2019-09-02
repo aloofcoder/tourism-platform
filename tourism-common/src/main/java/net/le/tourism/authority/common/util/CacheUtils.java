@@ -1,4 +1,4 @@
-package net.le.tourism.authority.util;
+package net.le.tourism.common.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;

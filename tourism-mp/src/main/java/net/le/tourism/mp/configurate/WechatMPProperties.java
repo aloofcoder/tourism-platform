@@ -1,4 +1,4 @@
-package net.le.tourism.mp.configurate;
+package net.le.tourism.authority.mp.configurate;
 
 import lombok.Data;
 import net.le.tourism.mp.util.JsonUtils;

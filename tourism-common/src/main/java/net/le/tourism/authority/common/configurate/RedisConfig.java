@@ -1,4 +1,4 @@
-package net.le.tourism.authority.configurate;
+package net.le.tourism.common.configurate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

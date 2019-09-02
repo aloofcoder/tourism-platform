@@ -2,11 +2,10 @@ package net.le.tourism.authority.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.HttpMethod;
-import net.le.tourism.authority.annotation.IgnoreToken;
+import net.le.tourism.authority.common.annotation.IgnoreToken;
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
 import net.le.tourism.authority.pojo.vo.TokenVo;
-import net.le.tourism.authority.result.CommonResult;
+import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.service.ILoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

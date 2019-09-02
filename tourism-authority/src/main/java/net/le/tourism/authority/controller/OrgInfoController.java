@@ -8,7 +8,7 @@ import net.le.tourism.authority.pojo.dto.EditOrgInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertOrgInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryOrgInfoDto;
 import net.le.tourism.authority.pojo.vo.QueryOrgInfoVo;
-import net.le.tourism.authority.result.CommonResult;
+import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.service.IOrgInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

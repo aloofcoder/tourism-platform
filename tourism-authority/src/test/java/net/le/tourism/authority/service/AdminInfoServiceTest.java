@@ -2,24 +2,20 @@ package net.le.tourism.authority.service;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.result.PageResult;
+import net.le.tourism.authority.common.util.BaseContextUtils;
 import net.le.tourism.authority.pojo.dto.InsertAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.vo.QueryAdminInfoVo;
-import net.le.tourism.authority.result.PageResult;
-import net.le.tourism.authority.util.BaseContextUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +24,10 @@ import java.util.List;
  * @author hanle
  * @version v1.0
  * @date 2019-05-17
- * @modify
- *
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * @modify 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Transactional
 public class AdminInfoServiceTest {
 
     @Autowired
@@ -53,7 +46,7 @@ public class AdminInfoServiceTest {
         System.out.println(adminInfoService.list());
     }
 
-//    @Rollback
+    //    @Rollback
     @Test
     public void insertAdminInfoTest() {
         for (int i = 0; i < 20; i++) {

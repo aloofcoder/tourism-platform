@@ -1,9 +1,9 @@
 package net.le.tourism.authority.service;
 
-import net.le.tourism.authority.constant.Constants;
+import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.pojo.dto.InsertOrgInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryOrgInfoDto;
-import net.le.tourism.authority.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.BaseContextUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

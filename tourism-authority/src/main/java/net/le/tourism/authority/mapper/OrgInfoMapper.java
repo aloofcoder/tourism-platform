@@ -22,4 +22,6 @@ public interface OrgInfoMapper extends BaseMapper<OrgInfo> {
     List<QueryOrgInfoVo> queryOrgInfo(@Param("orgId") Integer orgId);
 
     List<QueryOrgInfoVo> querySubOrgInfo(@Param("parentId") Integer parentId);
+
+    Integer queryOrgIdByCondition(String condition);
 }

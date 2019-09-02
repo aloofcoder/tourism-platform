@@ -1,9 +1,8 @@
-package net.le.tourism.authority.util;
+package net.le.tourism.authority.common.util;
 
-import net.le.tourism.authority.constant.Constants;
+import net.le.tourism.authority.common.constant.Constants;
 import org.springframework.data.redis.core.script.DigestUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
@@ -11,9 +10,7 @@ import java.util.UUID;
  * @author hanle
  * @version v1.0
  * @date 2019-06-20
- * @modify
- *
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * @modify 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 public class TourismUtils {
 

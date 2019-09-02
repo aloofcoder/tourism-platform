@@ -2,7 +2,7 @@ package net.le.tourism.authority.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import net.le.tourism.authority.constant.Constants;
+import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
 import net.le.tourism.authority.pojo.dto.EditAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertAdminInfoDto;

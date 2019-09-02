@@ -1,4 +1,4 @@
-package net.le.tourism.authority.util;
+package net.le.tourism.authority.common.util;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

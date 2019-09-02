@@ -1,7 +1,7 @@
-package net.le.tourism.authority.exception;
+package net.le.tourism.authority.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import net.le.tourism.authority.result.CommonResult;
+import net.le.tourism.authority.common.result.CommonResult;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

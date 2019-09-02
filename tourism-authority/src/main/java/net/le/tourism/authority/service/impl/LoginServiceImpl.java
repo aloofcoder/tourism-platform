@@ -2,19 +2,19 @@ package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.exception.AppServiceException;
-import net.le.tourism.authority.exception.ErrorCode;
-import net.le.tourism.authority.mapper.AdminInfoMapper;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.exception.AppServiceException;
+import net.le.tourism.authority.common.exception.ErrorCode;
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
 import net.le.tourism.authority.pojo.dto.TokenDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.vo.TokenVo;
+import net.le.tourism.authority.mapper.AdminInfoMapper;
 import net.le.tourism.authority.service.ILoginService;
-import net.le.tourism.authority.util.BaseContextUtils;
-import net.le.tourism.authority.util.CacheUtils;
-import net.le.tourism.authority.util.ServletUtils;
-import net.le.tourism.authority.util.TourismUtils;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.CacheUtils;
+import net.le.tourism.authority.common.util.ServletUtils;
+import net.le.tourism.authority.common.util.TourismUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -22,7 +22,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**

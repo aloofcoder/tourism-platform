@@ -2,19 +2,20 @@ package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.exception.AppServiceException;
-import net.le.tourism.authority.exception.ErrorCode;
-import net.le.tourism.authority.mapper.OrgAdminMapper;
-import net.le.tourism.authority.mapper.OrgInfoMapper;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.exception.AppServiceException;
+import net.le.tourism.authority.common.exception.ErrorCode;
 import net.le.tourism.authority.pojo.dto.EditOrgInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertOrgInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryOrgInfoDto;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
 import net.le.tourism.authority.pojo.entity.OrgInfo;
 import net.le.tourism.authority.pojo.vo.QueryOrgInfoVo;
+import net.le.tourism.authority.mapper.OrgAdminMapper;
+import net.le.tourism.authority.mapper.OrgInfoMapper;
 import net.le.tourism.authority.service.IOrgInfoService;
-import net.le.tourism.authority.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,8 @@ public class OrgInfoServiceImpl extends ServiceImpl<OrgInfoMapper, OrgInfo> impl
         if (entity == null) {
             return new ArrayList<>();
         }
-        List<QueryOrgInfoVo> list = orgInfoMapper.queryOrgInfo(entity.getOrgId());
+        Integer orgId = entity.getOrgId();
+        List<QueryOrgInfoVo> list = orgInfoMapper.queryOrgInfo(orgId);
         return list;
     }
 

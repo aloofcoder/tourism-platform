@@ -1,4 +1,4 @@
-package net.le.tourism.mp.configurate;
+package net.le.tourism.authority.mp.configurate;
 
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
@@ -7,7 +7,6 @@ import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sun.rmi.log.LogHandler;
 
 import java.util.List;
 import java.util.stream.Collectors;

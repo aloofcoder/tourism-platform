@@ -1,8 +1,8 @@
-package net.le.tourism.authority.configurate;
+package net.le.tourism.authority.common.configurate;
 
 import io.swagger.annotations.ApiOperation;
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.constant.properties.SwaggerProperties;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.constant.properties.SwaggerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

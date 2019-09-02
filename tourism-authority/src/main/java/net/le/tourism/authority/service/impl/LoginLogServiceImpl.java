@@ -1,13 +1,13 @@
 package net.le.tourism.authority.service.impl;
 
-import net.le.tourism.authority.constant.Constants;
+import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.pojo.dto.InsertLoginLogDto;
 import net.le.tourism.authority.pojo.entity.LoginLog;
 import net.le.tourism.authority.mapper.LoginLogMapper;
 import net.le.tourism.authority.service.ILoginLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.le.tourism.authority.util.BaseContextUtils;
-import net.le.tourism.authority.util.ServletUtils;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.ServletUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

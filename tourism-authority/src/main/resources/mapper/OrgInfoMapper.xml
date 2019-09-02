@@ -51,13 +51,6 @@
         LEFT JOIN org_info o ON oi.parent_id = o.org_id
         WHERE
             oi.status = 0
-            <!--
-                <if test="dto != null and dto.condition != null and dto.condition != ''">
-                    AND
-                    CONCAT(IFNULL(oi.org_name, ''), IFNULL(oi.org_admin, ''))
-                    LIKE CONCAT('%', #{dto.condition}, '%')
-                </if>
-            -->
             AND oi.org_id = #{orgId}
             order by oi.org_sort
     </select>
@@ -79,5 +72,14 @@
         oi.status = 0
         AND oi.parent_id = #{parentId}
         order by oi.org_sort
+    </select>
+
+    <select id="queryOrgIdByCondition" resultType="int">
+        SELECT
+            MIN(org_id) org_id
+        FROM
+            org_info
+        WHERE
+            org_name LIKE CONCAT('%', #{condition}, '%')
     </select>
 </mapper>

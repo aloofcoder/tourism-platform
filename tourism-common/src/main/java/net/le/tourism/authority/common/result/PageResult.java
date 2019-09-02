@@ -1,4 +1,4 @@
-package net.le.tourism.authority.result;
+package net.le.tourism.authority.common.result;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;

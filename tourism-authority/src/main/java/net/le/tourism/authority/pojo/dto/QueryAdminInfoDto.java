@@ -1,5 +1,7 @@
 package net.le.tourism.authority.pojo.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -13,10 +15,9 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@ApiModel(value = "分页查询管理员参数")
 public class QueryAdminInfoDto extends PageQueryBaseDto {
 
-    /**
-     * 查询条件
-     */
+    @ApiModelProperty(value = "查询条件", name = "condition", dataType = "String")
     private String condition;
 }

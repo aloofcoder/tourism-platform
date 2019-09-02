@@ -1,4 +1,4 @@
-package net.le.tourism.authority.constant.properties;
+package net.le.tourism.authority.common.constant.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

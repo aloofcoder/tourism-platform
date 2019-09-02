@@ -6,7 +6,7 @@ import net.le.tourism.authority.pojo.dto.InsertRoleInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryRoleInfoDto;
 import net.le.tourism.authority.pojo.entity.RoleInfo;
 import net.le.tourism.authority.pojo.vo.QueryRoleInfoVo;
-import net.le.tourism.authority.result.PageResult;
+import net.le.tourism.authority.common.result.PageResult;
 
 /**
  * <p>

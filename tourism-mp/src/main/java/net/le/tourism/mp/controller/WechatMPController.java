@@ -1,15 +1,26 @@
-package net.le.tourism.mp.controller;
+package net.le.tourism.authority.mp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import net.le.tourism.authority.mp.pojo.dto.TokenModelDto;
+import net.le.tourism.authority.mp.pojo.vo.TokenVo;
+import net.le.tourism.mp.util.CacheUtils;
+import net.le.tourism.mp.util.CollectionUtils;
+import net.le.tourism.mp.util.ServletUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 /**
  * @author hanle
@@ -23,33 +34,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @AllArgsConstructor
 @Controller
-@RequestMapping("/mp/redirect/{appid}")
+@RequestMapping("/mp/{appid}")
 public class WechatMPController {
 
     private final WxMpService wxService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @ResponseBody
     @RequestMapping("/login")
-    public String login(@PathVariable("appid") String appid, @RequestParam String code) {
+    public TokenVo login(@PathVariable("appid") String appid, @RequestParam String code) {
         if (!this.wxService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
-
+        TokenVo tokenVo = new TokenVo();
         try {
             WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
-            WxMpUser user = wxService.oauth2getUserInfo(accessToken, null);
-            System.out.println(user);
-            log.error("loginUser >>> " + user);
+            String token = UUID.randomUUID().toString().replaceAll("-", "");
+            TokenModelDto tokenModel = new TokenModelDto();
+            tokenModel.setOpenId(accessToken.getOpenId());
+            tokenModel.setAccessToken(accessToken.getAccessToken());
+            tokenModel.setRefreshToken(accessToken.getRefreshToken());
+            CacheUtils.hMSet(redisTemplate, token, CollectionUtils.beanToMap(tokenModel), accessToken.getExpiresIn());
+            tokenVo.setToken(token);
         } catch (WxErrorException e) {
             e.printStackTrace();
         }
-        return "redirect:index";
+        return tokenVo;
     }
 
+    @ResponseBody
     @RequestMapping("/build_url")
-    public String buildReqURL() {
-        String url = "http://localhost:8002/mp/redirect/wx7bc5e4de130fc588/login";
+    public String buildReqURL(@PathVariable("appid") String appid) {
+        String url = String.format("http://ef8wj8.natappfree.cc/mp/%s/login", appid);
         String redirectURL = wxService.oauth2buildAuthorizationUrl(url, "snsapi_userinfo", "index");
         log.error("RedirectURL >>> " + redirectURL);
         return redirectURL;
     }
+
+    @ResponseBody
+    @RequestMapping("/getInfo")
+    public String getInfo() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("sid");
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute(token));
+        return "";
+    }
+
 }

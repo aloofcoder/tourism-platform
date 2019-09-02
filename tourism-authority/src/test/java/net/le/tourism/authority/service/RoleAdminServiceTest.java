@@ -1,7 +1,7 @@
 package net.le.tourism.authority.service;
 
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.util.BaseContextUtils;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.util.BaseContextUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

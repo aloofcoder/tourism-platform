@@ -14,6 +14,4 @@ import lombok.ToString;
 @Data
 @ToString
 public class QueryOrgInfoDto {
-
-//    private String condition;
 }

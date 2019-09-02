@@ -7,7 +7,7 @@ import net.le.tourism.authority.pojo.dto.EditSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.InsertSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
 import net.le.tourism.authority.pojo.vo.QuerySourceInfoVo;
-import net.le.tourism.authority.result.CommonResult;
+import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.service.ISourceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

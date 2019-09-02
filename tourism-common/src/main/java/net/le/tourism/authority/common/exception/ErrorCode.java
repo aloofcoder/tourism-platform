@@ -1,4 +1,4 @@
-package net.le.tourism.authority.exception;
+package net.le.tourism.authority.common.exception;
 
 import lombok.Getter;
 
