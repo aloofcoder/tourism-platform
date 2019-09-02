@@ -16,4 +16,6 @@ import java.util.List;
 public interface IRoleAdminService extends IService<RoleAdmin> {
 
     void insertRoleAdminByAdmin(Integer adminId, List<Integer> roleIds);
+
+    List<Integer> queryRoleIdsByAdminId(Integer adminId);
 }

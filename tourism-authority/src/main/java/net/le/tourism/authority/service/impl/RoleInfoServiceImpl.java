@@ -12,6 +12,7 @@ import net.le.tourism.authority.pojo.dto.QueryRoleInfoDto;
 import net.le.tourism.authority.pojo.entity.RoleAdmin;
 import net.le.tourism.authority.pojo.entity.RoleInfo;
 import net.le.tourism.authority.pojo.entity.RoleSource;
+import net.le.tourism.authority.pojo.vo.QueryCompleteRoleInfoVo;
 import net.le.tourism.authority.pojo.vo.QueryRoleInfoVo;
 import net.le.tourism.authority.mapper.RoleAdminMapper;
 import net.le.tourism.authority.mapper.RoleInfoMapper;
@@ -94,5 +95,10 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo> i
         roleSourceMapper.delete(wrapper);
         // 删除角色
         roleInfoMapper.deleteById(roleId);
+    }
+
+    @Override
+    public List<QueryCompleteRoleInfoVo> queryCompleteRoleInfo() {
+        return roleInfoMapper.queryCompleteRoleInfo();
     }
 }

@@ -14,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ILoginLogService extends IService<LoginLog> {
 
-    void addLoginLog(InsertLoginLogDto insertLoginLogDto);
+    void addLoginLog(String loginNum, Integer status, String loginResult);
 }

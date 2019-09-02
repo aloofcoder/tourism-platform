@@ -38,4 +38,13 @@
             AND (role_name LIKE CONCAT('%', #{dto.condition}, '%'))
         </if>
     </select>
+
+    <resultMap id="QueryCompleteRoleInfoResultMap" type="net.le.tourism.authority.pojo.vo.QueryCompleteRoleInfoVo">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+    </resultMap>
+
+    <select id="queryCompleteRoleInfo" resultMap="QueryCompleteRoleInfoResultMap">
+        SELECT role_id, role_name FROM role_info
+    </select>
 </mapper>

@@ -52,6 +52,14 @@ public class Constants {
     public static final String LOGIN_TOKEN = "adminToken";
 
     /**
+     * 管理员所在组织
+     */
+    public static final String LOGIN_ORG = "orgId";
+
+
+    public static final String LOGIN_ROLE = "adminRole";
+
+    /**
      * 默认时区
      */
     public static final String DEFAULT_TIME_ZONE = "GMT+8";

@@ -55,11 +55,12 @@ public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
-            // 保存线程本地变量
+            // 将当前访问用户信息保存到线程本地变量
             BaseContextUtils.set(Constants.LOGIN_ID, tokenDto.getAdminId());
             BaseContextUtils.set(Constants.LOGIN_NUM, tokenDto.getAdminNum());
             BaseContextUtils.set(Constants.LOGIN_NAME, tokenDto.getAdminName());
             BaseContextUtils.set(Constants.LOGIN_TOKEN, tokenDto.getToken());
+            BaseContextUtils.set(Constants.LOGIN_ORG, tokenDto.getOrgId());
         }
         return super.preHandle(request, response, handler);
     }
