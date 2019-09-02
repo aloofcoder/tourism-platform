@@ -1,15 +1,15 @@
-package net.le.tourism.authority.mp.controller;
+package net.le.tourism.mp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import net.le.tourism.authority.mp.pojo.dto.TokenModelDto;
-import net.le.tourism.authority.mp.pojo.vo.TokenVo;
-import net.le.tourism.mp.util.CacheUtils;
-import net.le.tourism.mp.util.CollectionUtils;
-import net.le.tourism.mp.util.ServletUtils;
+import net.le.tourism.authority.common.util.CacheUtils;
+import net.le.tourism.authority.common.util.CollectionUtils;
+import net.le.tourism.authority.common.util.ServletUtils;
+import net.le.tourism.mp.pojo.dto.TokenModelDto;
+import net.le.tourism.mp.pojo.vo.TokenVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -56,9 +57,12 @@ public class WechatMPController {
             tokenModel.setOpenId(accessToken.getOpenId());
             tokenModel.setAccessToken(accessToken.getAccessToken());
             tokenModel.setRefreshToken(accessToken.getRefreshToken());
-            CacheUtils.hMSet(redisTemplate, token, CollectionUtils.beanToMap(tokenModel), accessToken.getExpiresIn());
+            Map<String, Object> tokenMap = CollectionUtils.objectToMap(tokenModel);
+            CacheUtils.hMSet(redisTemplate, token, tokenMap, accessToken.getExpiresIn());
             tokenVo.setToken(token);
         } catch (WxErrorException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return tokenVo;

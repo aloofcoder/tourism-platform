@@ -1,8 +1,10 @@
-package net.le.tourism.authority.mp;
+package net.le.tourism.mp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
+@ComponentScan(basePackages = "net.le.tourism")
 @SpringBootApplication
 public class TourismMpApplication {
 

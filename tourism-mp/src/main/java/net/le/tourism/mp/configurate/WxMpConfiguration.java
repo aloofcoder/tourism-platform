@@ -1,4 +1,4 @@
-package net.le.tourism.authority.mp.configurate;
+package net.le.tourism.mp.configurate;
 
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;

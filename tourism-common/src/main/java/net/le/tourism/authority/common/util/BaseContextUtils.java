@@ -1,4 +1,4 @@
-package net.le.tourism.common.util;
+package net.le.tourism.authority.common.util;
 
 import java.util.HashMap;
 import java.util.Map;

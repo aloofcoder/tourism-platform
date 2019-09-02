@@ -1,4 +1,4 @@
-package net.le.tourism.authority.configurate;
+package net.le.tourism.authority.common.configurate;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;

@@ -1,10 +1,10 @@
-package net.le.tourism.common.result;
+package net.le.tourism.authority.common.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.le.tourism.common.exception.ErrorCode;
-import net.le.tourism.common.util.ServletUtils;
+import net.le.tourism.authority.common.exception.ErrorCode;
+import net.le.tourism.authority.common.util.ServletUtils;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,4 +1,4 @@
-package net.le.tourism.common.constant;
+package net.le.tourism.authority.common.constant;
 
 /**
  * @author hanle

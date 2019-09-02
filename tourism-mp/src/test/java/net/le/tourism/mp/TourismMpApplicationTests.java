@@ -1,4 +1,4 @@
-package net.le.tourism.authority.mp;
+package net.le.tourism.mp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

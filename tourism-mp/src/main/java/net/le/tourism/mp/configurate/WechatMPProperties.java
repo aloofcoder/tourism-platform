@@ -1,7 +1,7 @@
-package net.le.tourism.authority.mp.configurate;
+package net.le.tourism.mp.configurate;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
-import net.le.tourism.mp.util.JsonUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
@@ -44,6 +44,6 @@ public class WechatMPProperties {
 
     @Override
     public String toString() {
-        return JsonUtils.toJson(this);
+        return JSON.toJSONString(this);
     }
 }

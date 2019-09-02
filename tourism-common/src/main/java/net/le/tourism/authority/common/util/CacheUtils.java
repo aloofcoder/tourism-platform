@@ -1,4 +1,4 @@
-package net.le.tourism.common.util;
+package net.le.tourism.authority.common.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -64,7 +64,7 @@ public class CacheUtils {
      * @param value
      * @param second
      */
-    public static void hMSet(RedisTemplate redisTemplate, String key, Map<Object, Object> value, long second) {
+    public static void hMSet(RedisTemplate redisTemplate, String key, Map<String, Object> value, long second) {
         redisTemplate.opsForHash().putAll(key, value);
         redisTemplate.expire(key, second, TimeUnit.SECONDS);
     }
