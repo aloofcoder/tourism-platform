@@ -2,63 +2,35 @@ package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
 import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.common.exception.AppServiceException;
 import net.le.tourism.authority.common.exception.ErrorCode;
-=======
-import net.le.tourism.authority.constant.Constants;
-import net.le.tourism.authority.exception.AppServiceException;
-import net.le.tourism.authority.exception.ErrorCode;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.CacheUtils;
+import net.le.tourism.authority.common.util.ServletUtils;
+import net.le.tourism.authority.common.util.TourismUtils;
 import net.le.tourism.authority.mapper.AdminInfoMapper;
-import net.le.tourism.authority.mapper.OrgAdminMapper;
->>>>>>> bc14e8d1a1a1ad54b6f19616f77ad8f596f92f8a
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
 import net.le.tourism.authority.pojo.dto.TokenDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
 import net.le.tourism.authority.pojo.vo.TokenVo;
-<<<<<<< HEAD
-import net.le.tourism.authority.mapper.AdminInfoMapper;
-import net.le.tourism.authority.service.ILoginService;
-import net.le.tourism.authority.common.util.BaseContextUtils;
-import net.le.tourism.authority.common.util.CacheUtils;
-import net.le.tourism.authority.common.util.ServletUtils;
-import net.le.tourism.authority.common.util.TourismUtils;
-=======
 import net.le.tourism.authority.service.ILoginLogService;
 import net.le.tourism.authority.service.ILoginService;
 import net.le.tourism.authority.service.IOrgAdminService;
-import net.le.tourism.authority.service.IRoleAdminService;
-import net.le.tourism.authority.util.BaseContextUtils;
-import net.le.tourism.authority.util.CacheUtils;
-import net.le.tourism.authority.util.ServletUtils;
-import net.le.tourism.authority.util.TourismUtils;
->>>>>>> bc14e8d1a1a1ad54b6f19616f77ad8f596f92f8a
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
-=======
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
->>>>>>> bc14e8d1a1a1ad54b6f19616f77ad8f596f92f8a
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author hanle
  * @version v1.0
  * @date 2019-06-15
- * @modify
- *
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * @modify 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 @Slf4j
 @Service
