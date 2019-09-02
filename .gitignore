@@ -29,3 +29,6 @@ HELP.md
 .vscode/
 
 **/target/
+**/.mvn/
+
+.mvn
