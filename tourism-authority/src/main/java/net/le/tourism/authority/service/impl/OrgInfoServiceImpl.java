@@ -44,9 +44,9 @@ public class OrgInfoServiceImpl extends ServiceImpl<OrgInfoMapper, OrgInfo> impl
     @Override
     public List<QueryOrgInfoVo> queryOrgInfo(QueryOrgInfoDto queryOrgInfoDto) {
         // 获取当前登录人下的所有 parentId
-        String adminId = BaseContextUtils.get(Constants.LOGIN_ID).toString();
+        String adminNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("admin_id", adminId);
+        wrapper.eq("admin_num", adminNum);
         OrgAdmin entity = orgAdminMapper.selectOne(wrapper);
         if (entity == null) {
             return new ArrayList<>();
@@ -58,7 +58,7 @@ public class OrgInfoServiceImpl extends ServiceImpl<OrgInfoMapper, OrgInfo> impl
 
     @Override
     public void insertOrgInfo(InsertOrgInfoDto insertOrgInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.LOGIN_NUM).toString();
+        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         if (insertOrgInfoDto == null || insertOrgInfoDto.getParentId() == null) {
             throw new AppServiceException(ErrorCode.sys_insert_org_error);
         }
@@ -75,7 +75,7 @@ public class OrgInfoServiceImpl extends ServiceImpl<OrgInfoMapper, OrgInfo> impl
         if (editOrgInfoDto == null || editOrgInfoDto.getParentId() == null) {
             throw new AppServiceException(ErrorCode.sys_edit_org_error);
         }
-        String loginName = BaseContextUtils.get(Constants.LOGIN_NAME).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         OrgInfo entity = new OrgInfo();
         BeanUtils.copyProperties(editOrgInfoDto, entity);
         entity.setEditUser(loginName);

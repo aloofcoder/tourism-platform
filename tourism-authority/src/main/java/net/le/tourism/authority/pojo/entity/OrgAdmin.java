@@ -29,7 +29,7 @@ public class OrgAdmin extends Model<OrgAdmin> {
 
     private Integer orgId;
 
-    private Integer adminId;
+    private String adminNum;
 
 
     @Override

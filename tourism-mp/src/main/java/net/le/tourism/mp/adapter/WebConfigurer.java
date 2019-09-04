@@ -16,7 +16,7 @@ import java.util.List;
  *
  * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
-//@Configuration
+@Configuration
 public class WebConfigurer implements WebMvcConfigurer {
 
     @Autowired

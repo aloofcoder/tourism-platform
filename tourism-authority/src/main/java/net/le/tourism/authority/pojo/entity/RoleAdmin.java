@@ -26,7 +26,7 @@ private static final long serialVersionUID=1L;
 
     private Integer roleId;
 
-    private Integer adminId;
+    private String adminNum;
 
 
     @Override

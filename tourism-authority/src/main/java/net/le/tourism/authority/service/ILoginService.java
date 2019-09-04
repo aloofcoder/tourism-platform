@@ -1,7 +1,7 @@
 package net.le.tourism.authority.service;
 
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
-import net.le.tourism.authority.pojo.dto.TokenDto;
+import net.le.tourism.authority.pojo.dto.AuthTokenDto;
 import net.le.tourism.authority.pojo.vo.TokenVo;
 
 /**
@@ -30,5 +30,5 @@ public interface ILoginService {
      * @param token
      * @return
      */
-    TokenDto validateLogin(String token);
+    AuthTokenDto validateLogin(String token);
 }

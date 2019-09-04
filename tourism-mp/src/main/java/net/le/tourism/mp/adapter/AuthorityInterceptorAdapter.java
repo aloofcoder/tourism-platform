@@ -1,7 +1,15 @@
 package net.le.tourism.mp.adapter;
 
 import lombok.extern.slf4j.Slf4j;
+import net.le.tourism.authority.common.annotation.IgnoreToken;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.exception.AppServiceException;
+import net.le.tourism.authority.common.exception.ErrorCode;
 import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.TourismUtils;
+import net.le.tourism.mp.pojo.dto.MPTokenDto;
+import net.le.tourism.mp.service.IWechatMpService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -19,11 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
 
+    @Autowired
+    private IWechatMpService wechatMpService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             log.info(request.getRequestURI());
-            /*
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             IgnoreToken annotation = handlerMethod.getBeanType().getAnnotation(IgnoreToken.class);
             if (annotation == null) {
@@ -38,19 +48,16 @@ public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
-            // 验证是否登录
-            TokenDto tokenDto = loginService.validateLogin(token);
+            MPTokenDto tokenDto = wechatMpService.validateLogin(token);
+            // TODO - 验证是否登录
             if (tokenDto == null) {
                 log.error("登录token无效！");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
             // 保存线程本地变量
-            BaseContextUtils.set(Constants.LOGIN_ID, tokenDto.getAdminId());
-            BaseContextUtils.set(Constants.LOGIN_NUM, tokenDto.getAdminNum());
-            BaseContextUtils.set(Constants.LOGIN_NAME, tokenDto.getAdminName());
-            BaseContextUtils.set(Constants.LOGIN_TOKEN, tokenDto.getToken());
-             */
+            BaseContextUtils.set(Constants.OPEN_ID_KEY, tokenDto.getOpenId());
+            BaseContextUtils.set(Constants.MP_TOKEN, token);
         }
         return super.preHandle(request, response, handler);
     }

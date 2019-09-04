@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface RoleAdminMapper extends BaseMapper<RoleAdmin> {
 
-    void insertRoleAdminByAdmin(@Param("adminId") Integer adminId, @Param("roleIds") List<Integer> roleIds);
+    void insertRoleAdminByAdmin(@Param("adminNum") String adminNum, @Param("roleIds") List<Integer> roleIds);
 
-    List<Integer> selectRoleIdByAdminId(Integer adminid);
+    List<Integer> selectRoleIdByAdminNum(Integer adminNum);
 }

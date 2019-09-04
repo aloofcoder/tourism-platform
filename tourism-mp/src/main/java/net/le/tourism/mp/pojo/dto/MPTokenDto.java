@@ -14,11 +14,13 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
  */
 @Data
 @ToString
-public class TokenModelDto {
+public class MPTokenDto {
 
     private String openId;
 
     private String accessToken;
 
     private String refreshToken;
+
+    private String token;
 }

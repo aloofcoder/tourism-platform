@@ -5,10 +5,10 @@ import net.le.tourism.authority.common.annotation.IgnoreToken;
 import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.common.exception.AppServiceException;
 import net.le.tourism.authority.common.exception.ErrorCode;
-import net.le.tourism.authority.pojo.dto.TokenDto;
-import net.le.tourism.authority.service.ILoginService;
 import net.le.tourism.authority.common.util.BaseContextUtils;
 import net.le.tourism.authority.common.util.TourismUtils;
+import net.le.tourism.authority.pojo.dto.AuthTokenDto;
+import net.le.tourism.authority.service.ILoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -49,18 +49,16 @@ public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
             // 验证是否登录
-            TokenDto tokenDto = loginService.validateLogin(token);
-            if (tokenDto == null) {
+            AuthTokenDto authTokenDto = loginService.validateLogin(token);
+            if (authTokenDto == null) {
                 log.error("登录token无效！");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
             // 将当前访问用户信息保存到线程本地变量
-            BaseContextUtils.set(Constants.LOGIN_ID, tokenDto.getAdminId());
-            BaseContextUtils.set(Constants.LOGIN_NUM, tokenDto.getAdminNum());
-            BaseContextUtils.set(Constants.LOGIN_NAME, tokenDto.getAdminName());
-            BaseContextUtils.set(Constants.LOGIN_TOKEN, tokenDto.getToken());
-            BaseContextUtils.set(Constants.LOGIN_ORG, tokenDto.getOrgId());
+            BaseContextUtils.set(Constants.ADMIN_NUM, authTokenDto.getAdminNum());
+            BaseContextUtils.set(Constants.ADMIN_ORG, authTokenDto.getOrgId());
+            BaseContextUtils.set(Constants.LOGIN_TOKEN, authTokenDto.getToken());
         }
         return super.preHandle(request, response, handler);
     }

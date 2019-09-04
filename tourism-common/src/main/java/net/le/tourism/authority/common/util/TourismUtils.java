@@ -55,6 +55,10 @@ public class TourismUtils {
     }
 
 
+    public static String buildMPTokenKey(String token) {
+        return String.format("%1$s_%2$s", Constants.MP_TOKEN_SUFFIX, token);
+    }
+
     /*
     public static void main(String[] args) {
         System.out.println(getAdminNum());

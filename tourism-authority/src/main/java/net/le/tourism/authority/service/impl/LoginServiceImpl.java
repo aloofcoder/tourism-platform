@@ -11,7 +11,7 @@ import net.le.tourism.authority.common.util.ServletUtils;
 import net.le.tourism.authority.common.util.TourismUtils;
 import net.le.tourism.authority.mapper.AdminInfoMapper;
 import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
-import net.le.tourism.authority.pojo.dto.TokenDto;
+import net.le.tourism.authority.pojo.dto.AuthTokenDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
 import net.le.tourism.authority.pojo.vo.TokenVo;
@@ -77,14 +77,13 @@ public class LoginServiceImpl implements ILoginService {
         String token = TourismUtils.getToken();
         // 生成用户登录token缓存
         String tokenKey = TourismUtils.getAdminTokenKey(adminInfo.getAdminNum(), token);
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAdminId(adminInfo.getAdminId());
-        tokenDto.setAdminNum(adminInfo.getAdminNum());
-        tokenDto.setAdminName(adminInfo.getAdminName());
-        tokenDto.setToken(token);
-        tokenDto.setOrgId(orgAdmin.getOrgId());
+        AuthTokenDto authTokenDto = new AuthTokenDto();
+        authTokenDto.setAdminNum(adminInfo.getAdminNum());
+        authTokenDto.setAdminName(adminInfo.getAdminName());
+        authTokenDto.setToken(token);
+        authTokenDto.setOrgId(orgAdmin.getOrgId());
         // 缓存登录token
-        CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(tokenDto), 7200);
+        CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(authTokenDto), Constants.TOKEN_EXPIRE_TIME);
         HttpServletResponse response = ServletUtils.getResponse();
         response.addHeader(Constants.AUTHORITY_KEY, token);
         TokenVo tokenVo = new TokenVo();
@@ -96,32 +95,31 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public void logout() {
         String token = TourismUtils.getRequestToken();
-        String adminId = BaseContextUtils.get(Constants.LOGIN_ID).toString();
-        AdminInfo adminInfo = adminInfoMapper.selectById(adminId);
-        String tokenKey = TourismUtils.getAdminTokenKey(adminInfo.getAdminNum(), token);
+        String adminNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        String tokenKey = TourismUtils.getAdminTokenKey(adminNum, token);
         CacheUtils.remove(redisTemplate, tokenKey);
     }
 
     @Override
-    public TokenDto validateLogin(String token) {
+    public AuthTokenDto validateLogin(String token) {
         String pattern = TourismUtils.getAdminTokenKey("*", token);
         String tokenKey = CacheUtils.getOnlyKey(redisTemplate, pattern);
         if (StringUtils.isEmpty(tokenKey)) {
             return null;
         }
-        String adminId = CacheUtils.hGet(redisTemplate, tokenKey, Constants.LOGIN_ID);
-        String adminNum = CacheUtils.hGet(redisTemplate, tokenKey, Constants.LOGIN_NUM);
-        String adminName = CacheUtils.hGet(redisTemplate, tokenKey, Constants.LOGIN_NAME);
-        Integer orgId = Integer.parseInt(CacheUtils.hGet(redisTemplate, tokenKey, Constants.LOGIN_ORG));
-        if (StringUtils.isEmpty(adminId) || StringUtils.isEmpty(adminName) || StringUtils.isEmpty(adminNum)) {
+        String adminNum = CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_NUM);
+        String adminName = CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_NAME);
+        Integer orgId = Integer.parseInt(CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_ORG));
+        if (StringUtils.isEmpty(adminName) || StringUtils.isEmpty(adminNum) || orgId == null) {
             return null;
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAdminId(Integer.parseInt(adminId));
-        tokenDto.setAdminNum(adminNum);
-        tokenDto.setAdminName(adminName);
-        tokenDto.setToken(token);
-        tokenDto.setOrgId(orgId);
-        return tokenDto;
+        // 刷新token
+        AuthTokenDto authTokenDto = new AuthTokenDto();
+        authTokenDto.setAdminNum(adminNum);
+        authTokenDto.setAdminName(adminName);
+        authTokenDto.setToken(token);
+        authTokenDto.setOrgId(orgId);
+        CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(authTokenDto), Constants.TOKEN_EXPIRE_TIME);
+        return authTokenDto;
     }
 }

@@ -6,12 +6,12 @@
     <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.OrgAdmin">
         <id column="id" property="id"/>
         <result column="org_id" property="orgId" />
-        <result column="admin_id" property="adminId" />
+        <result column="admin_num" property="adminNum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, org_id, admin_id
+        id, org_id, admin_num
     </sql>
 
 </mapper>

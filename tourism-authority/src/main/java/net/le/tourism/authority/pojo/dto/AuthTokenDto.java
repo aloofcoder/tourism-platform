@@ -15,9 +15,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class TokenDto {
-
-    private Integer adminId;
+public class AuthTokenDto {
 
     private String adminNum;
 

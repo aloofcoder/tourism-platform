@@ -47,7 +47,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String uploadImg(MultipartFile file) {
-        String loginNum = BaseContextUtils.get(Constants.LOGIN_NUM).toString();
+        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         if (file == null) {
             throw new AppServiceException(ErrorCode.sys_file_not_null);
         }

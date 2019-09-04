@@ -28,8 +28,8 @@ public class OrgInfoServiceTest {
 
     @Before
     public void before() {
-        BaseContextUtils.set(Constants.LOGIN_ID, "24");
-        BaseContextUtils.set(Constants.LOGIN_NAME, "admin");
+        BaseContextUtils.set(Constants.ADMIN_NUM, "24");
+        BaseContextUtils.set(Constants.ADMIN_NAME, "admin");
         BaseContextUtils.set(Constants.LOGIN_TOKEN, "0469dff7d77c4d61a4dd579d879720bc");
     }
 

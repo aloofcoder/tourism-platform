@@ -24,12 +24,12 @@ public class RoleAdminServiceImpl extends ServiceImpl<RoleAdminMapper, RoleAdmin
     private RoleAdminMapper roleAdminMapper;
 
     @Override
-    public void insertRoleAdminByAdmin(Integer adminId, List<Integer> roleIds) {
-        roleAdminMapper.insertRoleAdminByAdmin(adminId, roleIds);
+    public void insertRoleAdminByAdmin(String adminNum, List<Integer> roleIds) {
+        roleAdminMapper.insertRoleAdminByAdmin(adminNum, roleIds);
     }
 
     @Override
-    public List<Integer> queryRoleIdsByAdminId(Integer adminId) {
-        return roleAdminMapper.selectRoleIdByAdminId(adminId);
+    public List<Integer> queryRoleIdsByAdminId(Integer adminNum) {
+        return roleAdminMapper.selectRoleIdByAdminNum(adminNum);
     }
 }

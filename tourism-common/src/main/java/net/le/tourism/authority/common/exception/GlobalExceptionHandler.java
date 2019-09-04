@@ -1,5 +1,6 @@
 package net.le.tourism.authority.common.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import lombok.extern.slf4j.Slf4j;
 import net.le.tourism.authority.common.result.CommonResult;
 import org.springframework.validation.BindException;
@@ -121,4 +122,18 @@ public class GlobalExceptionHandler {
         return result;
     }
 
+    /**
+     * 其他异常处理
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public CommonResult handle(Exception e) {
+        CommonResult result = new CommonResult(ErrorCode.sys_default_error.getCode(), ErrorCode.sys_default_error.getMsg());
+        // 输出在日志中
+        log.error("服务器请求错误,", result);
+        return result;
+    }
 }

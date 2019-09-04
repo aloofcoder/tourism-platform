@@ -57,7 +57,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Integer addAdminInfo(InsertAdminInfoDto adminInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.LOGIN_NUM).toString();
+        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         if (adminInfoDto.getRoleIds() == null || adminInfoDto.getRoleIds().size() == 0) {
             throw new AppServiceException(ErrorCode.sys_insert_admin_role_error);
         }
@@ -84,13 +84,12 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         entity.setEditUser(loginNum);
         adminInfoMapper.insert(entity);
         // 设置组织
-        Integer id = entity.getAdminId();
         OrgAdmin orgAdmin = new OrgAdmin();
-        orgAdmin.setAdminId(id);
+        orgAdmin.setAdminNum(adminNum);
         orgAdmin.setOrgId(adminInfoDto.getOrgId());
         orgAdminService.save(orgAdmin);
         // 设置角色
-        roleAdminService.insertRoleAdminByAdmin(id, adminInfoDto.getRoleIds());
+        roleAdminService.insertRoleAdminByAdmin(adminNum, adminInfoDto.getRoleIds());
         return entity.getAdminId();
     }
 
@@ -108,7 +107,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         }
         AdminInfo entity = adminInfoMapper.selectById(editAdminInfoDto.getAdminId());
         BeanUtils.copyProperties(editAdminInfoDto, entity);
-        entity.setEditUser(BaseContextUtils.get(Constants.LOGIN_NAME).toString());
+        entity.setEditUser(BaseContextUtils.get(Constants.ADMIN_NUM).toString());
         entity.setEditTime(new Date());
         adminInfoMapper.updateById(entity);
         // 删除已分配的角色
@@ -116,7 +115,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         roleWrapper.eq("admin_id", editAdminInfoDto.getAdminId());
         roleAdminService.remove(roleWrapper);
         // 重新分配角色
-        roleAdminService.insertRoleAdminByAdmin(editAdminInfoDto.getAdminId(), editAdminInfoDto.getRoleIds());
+        roleAdminService.insertRoleAdminByAdmin(editAdminInfoDto.getAd, editAdminInfoDto.getRoleIds());
         // 更改所在组织部门
         QueryWrapper<OrgAdmin> orgWrapper = new QueryWrapper<>();
         roleWrapper.eq("admin_id", editAdminInfoDto.getAdminId());
@@ -158,7 +157,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
 
     @Override
     public void editAdminInfoStatus(Integer adminId) {
-        String loginName = BaseContextUtils.get(Constants.LOGIN_NAME).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         if (adminId == null || adminId <= 0) {
             throw new AppServiceException(ErrorCode.sys_admin_id_un_found);
         }

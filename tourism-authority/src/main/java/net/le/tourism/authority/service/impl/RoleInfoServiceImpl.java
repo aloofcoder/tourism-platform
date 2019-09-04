@@ -48,7 +48,7 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo> i
 
     @Override
     public void insertRoleInfo(InsertRoleInfoDto insertRoleInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.LOGIN_NUM).toString();
+        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         RoleInfo entity = new RoleInfo();
         BeanUtils.copyProperties(insertRoleInfoDto, entity);
         entity.setStatus(0);

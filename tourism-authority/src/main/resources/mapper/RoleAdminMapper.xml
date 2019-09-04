@@ -6,25 +6,25 @@
     <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.RoleAdmin">
         <id column="id" property="id"/>
         <result column="role_id" property="roleId" />
-        <result column="admin_id" property="adminId" />
+        <result column="admin_num" property="adminNum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, role_id, admin_id
+        id, role_id, admin_num
     </sql>
     
     <insert id="insertRoleAdminByAdmin">
         INSERT INTO role_admin
-        (role_id, admin_id)
+        (role_id, admin_num)
         VALUES
         <foreach collection="roleIds" item="item" separator="," index="index">
-            (#{item}, #{adminId})
+            (#{item}, #{adminNum})
         </foreach>
     </insert>
 
-    <select id="selectRoleIdByAdminId" resultType="integer" parameterType="integer">
-        SELECT role_id FROM role_admin WHERE admin_id = #{adminid}
+    <select id="selectRoleIdByAdminNum" resultType="integer" parameterType="integer">
+        SELECT role_id FROM role_admin WHERE admin_num = #{adminNum}
     </select>
 
 </mapper>
