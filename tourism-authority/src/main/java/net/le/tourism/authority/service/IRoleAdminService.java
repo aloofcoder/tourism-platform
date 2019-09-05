@@ -17,5 +17,7 @@ public interface IRoleAdminService extends IService<RoleAdmin> {
 
     void insertRoleAdminByAdmin(String adminNum, List<Integer> roleIds);
 
-    List<Integer> queryRoleIdsByAdminId(Integer adminId);
+    void removeByAdminNum(String adminNum);
+
+    List<Integer> queryByAdminNum(String adminNum);
 }

@@ -22,11 +22,13 @@ public interface IAdminInfoService extends IService<AdminInfo> {
 
     AdminInfo getAdminInfoByLoginName(String loginName);
 
-    Integer addAdminInfo(InsertAdminInfoDto adminInfoDto);
+    String addAdminInfo(InsertAdminInfoDto adminInfoDto);
 
     void editAdminInfo(EditAdminInfoDto editAdminInfoDto);
 
-    void removeAdminInfoById(Integer adminId);
+    void removeAdminInfoById(String adminNum);
 
-    void editAdminInfoStatus(Integer adminId);
+    void editAdminInfoStatus(String adminNum);
+
+    AdminInfo getAdminInfoByAdminNum(String adminNum);
 }

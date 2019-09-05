@@ -23,9 +23,8 @@ public class EditAdminInfoDto {
 
     private static final long serialVersionUID = 1723937366677226009L;
 
-    @NotNull(message = "管理员ID不能为空！")
-    @Min(value = 1, message = "管理员ID必须大于0！")
-    private Integer adminId;
+    @NotNull(message = "管理员编号不能为空！")
+    private String adminNum;
 
     @NotBlank(message = "管理员姓名不能为空！")
     @Length(min = 1, max = 6, message = "管理员姓名长度必须在1~6位之间！")

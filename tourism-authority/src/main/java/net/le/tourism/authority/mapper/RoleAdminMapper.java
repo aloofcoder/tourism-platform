@@ -20,5 +20,5 @@ public interface RoleAdminMapper extends BaseMapper<RoleAdmin> {
 
     void insertRoleAdminByAdmin(@Param("adminNum") String adminNum, @Param("roleIds") List<Integer> roleIds);
 
-    List<Integer> selectRoleIdByAdminNum(Integer adminNum);
+    List<Integer> selectRoleIdByAdminNum(String adminNum);
 }

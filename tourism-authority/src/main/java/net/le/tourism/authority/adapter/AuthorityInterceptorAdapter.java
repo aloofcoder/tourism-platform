@@ -57,7 +57,7 @@ public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
             }
             // 将当前访问用户信息保存到线程本地变量
             BaseContextUtils.set(Constants.ADMIN_NUM, authTokenDto.getAdminNum());
-            BaseContextUtils.set(Constants.ADMIN_ORG, authTokenDto.getOrgId());
+            BaseContextUtils.set(Constants.ADMIN_NAME, authTokenDto.getAdminName());
             BaseContextUtils.set(Constants.LOGIN_TOKEN, authTokenDto.getToken());
         }
         return super.preHandle(request, response, handler);

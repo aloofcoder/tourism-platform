@@ -42,4 +42,10 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM source_info
+        WHERE parent_id = #{parentId}
+    </select>
 </mapper>

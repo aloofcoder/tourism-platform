@@ -13,5 +13,9 @@ import net.le.tourism.authority.pojo.entity.OrgAdmin;
  */
 public interface IOrgAdminService extends IService<OrgAdmin> {
 
-    OrgAdmin queryOrgAdminByAdminId(Integer adminId);
+    OrgAdmin queryByAdminNum(String adminNum);
+
+    void removeByAdminNum(String adminNum);
+
+    void updateByAdminNum(String adminNum, Integer orgId);
 }

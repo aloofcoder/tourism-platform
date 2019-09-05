@@ -29,7 +29,7 @@ public class LoginController {
     private ILoginService loginService;
 
     @IgnoreToken
-    @PostMapping
+    @PostMapping("/login")
     @ApiOperation(value = "管理员登陆接口")
     public CommonResult login(@Valid @RequestBody AdminLoginInfo adminLoginInfo) {
         TokenVo tokenVo = loginService.login(adminLoginInfo);

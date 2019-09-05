@@ -22,6 +22,4 @@ public class AuthTokenDto {
     private String adminName;
 
     private String token;
-
-    private Integer orgId;
 }

@@ -48,19 +48,17 @@ public class AdminInfoServiceTest {
     //    @Rollback
     @Test
     public void insertAdminInfoTest() {
-        for (int i = 0; i < 20; i++) {
-            InsertAdminInfoDto adminInfo = new InsertAdminInfoDto();
-            adminInfo.setAdminName("测试" + (i + 1));
-            adminInfo.setLoginName("cs" + (i + 1));
-            adminInfo.setAdminPwd("cs!@#");
-            adminInfo.setAdminMobile("1814919" + RandomUtils.nextInt(1000, 9999));
-            adminInfo.setAdminEmail("hanl" + (RandomUtils.nextInt(1000, 9999)) + "@163.com");
-            List<Integer> roleIds = new ArrayList<>();
-            roleIds.add(2);
-            adminInfo.setRoleIds(roleIds);
-            adminInfo.setOrgId(1);
-            adminInfoService.addAdminInfo(adminInfo);
-        }
+        InsertAdminInfoDto adminInfo = new InsertAdminInfoDto();
+        adminInfo.setAdminName("admin");
+        adminInfo.setLoginName("admin");
+        adminInfo.setAdminPwd("admin!@#");
+        adminInfo.setAdminMobile("18149197030");
+        adminInfo.setAdminEmail("hanl1946@163.com");
+        List<Integer> roleIds = new ArrayList<>();
+        roleIds.add(2);
+        adminInfo.setRoleIds(roleIds);
+        adminInfo.setOrgId(1);
+        adminInfoService.addAdminInfo(adminInfo);
     }
 
     @Test

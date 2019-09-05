@@ -92,7 +92,7 @@ public class AdminInfoControllerTest {
     @Test
     public void editAdminInfoTest() throws Exception {
         EditAdminInfoDto editAdminInfoDto = new EditAdminInfoDto();
-        editAdminInfoDto.setAdminId(12);
+        editAdminInfoDto.setAdminNum("12");
         editAdminInfoDto.setAdminName("测试");
         editAdminInfoDto.setLoginName("ceshi");
         editAdminInfoDto.setAdminPwd("ceshi123");

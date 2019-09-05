@@ -27,7 +27,7 @@ public class LoginServiceTest {
     public void login() {
         AdminLoginInfo adminLoginInfo = new AdminLoginInfo();
         adminLoginInfo.setLoginNum("admin");
-        adminLoginInfo.setLoginPwd("admin");
+        adminLoginInfo.setLoginPwd("admin!@#");
         System.out.println("=========================== 登录成功 ===========================");
         loginService.login(adminLoginInfo);
     }

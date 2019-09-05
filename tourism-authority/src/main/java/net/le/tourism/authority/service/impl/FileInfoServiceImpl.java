@@ -47,7 +47,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String uploadImg(MultipartFile file) {
-        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         if (file == null) {
             throw new AppServiceException(ErrorCode.sys_file_not_null);
         }
@@ -85,8 +85,8 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             entity.setFilePath(filePathSuffix);
             entity.setFileMd5(fileMd5);
             entity.setStatus(0);
-            entity.setCreateUser(loginNum);
-            entity.setEditUser(loginNum);
+            entity.setCreateUser(loginName);
+            entity.setEditUser(loginName);
             int count = fileInfoMapper.insert(entity);
             if (count == -1) {
                 throw new AppServiceException(ErrorCode.sys_file_upload_insert_error);

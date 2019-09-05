@@ -1,25 +1,25 @@
 package net.le.tourism.authority.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.common.exception.AppServiceException;
 import net.le.tourism.authority.common.exception.ErrorCode;
+import net.le.tourism.authority.common.result.PageResult;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.common.util.TourismUtils;
+import net.le.tourism.authority.mapper.AdminInfoMapper;
 import net.le.tourism.authority.pojo.dto.EditAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
-import net.le.tourism.authority.pojo.entity.RoleAdmin;
 import net.le.tourism.authority.pojo.vo.QueryAdminInfoVo;
-import net.le.tourism.authority.mapper.AdminInfoMapper;
-import net.le.tourism.authority.common.result.PageResult;
 import net.le.tourism.authority.service.IAdminInfoService;
 import net.le.tourism.authority.service.IOrgAdminService;
 import net.le.tourism.authority.service.IRoleAdminService;
-import net.le.tourism.authority.common.util.BaseContextUtils;
-import net.le.tourism.authority.common.util.TourismUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,8 +56,8 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Integer addAdminInfo(InsertAdminInfoDto adminInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+    public String addAdminInfo(InsertAdminInfoDto adminInfoDto) {
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         if (adminInfoDto.getRoleIds() == null || adminInfoDto.getRoleIds().size() == 0) {
             throw new AppServiceException(ErrorCode.sys_insert_admin_role_error);
         }
@@ -71,7 +71,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         // 保存管理员信息
         AdminInfo entity = new AdminInfo();
         BeanUtils.copyProperties(adminInfoDto, entity);
-        // 生成adminId
+        // 生成adminNum
         String adminNum = TourismUtils.getAdminNum();
         entity.setAdminNum(adminNum);
         // 获取加密盐值
@@ -80,8 +80,8 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         String pwd = TourismUtils.buildAdminPwd(salt, adminInfoDto.getAdminPwd());
         entity.setAdminPwd(pwd);
         entity.setSalt(salt);
-        entity.setCreateUser(loginNum);
-        entity.setEditUser(loginNum);
+        entity.setCreateUser(loginName);
+        entity.setEditUser(loginName);
         adminInfoMapper.insert(entity);
         // 设置组织
         OrgAdmin orgAdmin = new OrgAdmin();
@@ -90,7 +90,7 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         orgAdminService.save(orgAdmin);
         // 设置角色
         roleAdminService.insertRoleAdminByAdmin(adminNum, adminInfoDto.getRoleIds());
-        return entity.getAdminId();
+        return adminNum;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -99,69 +99,54 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         if (editAdminInfoDto.getRoleIds() == null || editAdminInfoDto.getRoleIds().size() == 0) {
             throw new AppServiceException(ErrorCode.sys_insert_admin_role_error);
         }
-        AdminInfo lastAdminInfo = adminInfoMapper.selectById(editAdminInfoDto.getAdminId());
+        AdminInfo lastAdminInfo = getAdminInfoByAdminNum(editAdminInfoDto.getAdminNum());
         AdminInfo adminInfo = getAdminInfoByLoginName(editAdminInfoDto.getLoginName());
         // 验证登录名是否与原来一致 不一致验证是否系统已存在
         if (adminInfo != null && !lastAdminInfo.getLoginName().equals(editAdminInfoDto.getLoginName())) {
             throw new AppServiceException(ErrorCode.sys_login_name_exists);
         }
-        AdminInfo entity = adminInfoMapper.selectById(editAdminInfoDto.getAdminId());
-        BeanUtils.copyProperties(editAdminInfoDto, entity);
-        entity.setEditUser(BaseContextUtils.get(Constants.ADMIN_NUM).toString());
-        entity.setEditTime(new Date());
-        adminInfoMapper.updateById(entity);
+        BeanUtils.copyProperties(editAdminInfoDto, lastAdminInfo);
+        lastAdminInfo.setEditUser(BaseContextUtils.get(Constants.ADMIN_NAME).toString());
+        lastAdminInfo.setEditTime(new Date());
+        adminInfoMapper.updateById(lastAdminInfo);
         // 删除已分配的角色
-        QueryWrapper<RoleAdmin> roleWrapper = new QueryWrapper();
-        roleWrapper.eq("admin_id", editAdminInfoDto.getAdminId());
-        roleAdminService.remove(roleWrapper);
+        roleAdminService.removeByAdminNum(editAdminInfoDto.getAdminNum());
         // 重新分配角色
-        roleAdminService.insertRoleAdminByAdmin(editAdminInfoDto.getAd, editAdminInfoDto.getRoleIds());
+        roleAdminService.insertRoleAdminByAdmin(editAdminInfoDto.getAdminNum(), editAdminInfoDto.getRoleIds());
         // 更改所在组织部门
-        QueryWrapper<OrgAdmin> orgWrapper = new QueryWrapper<>();
-        roleWrapper.eq("admin_id", editAdminInfoDto.getAdminId());
-        orgAdminService.remove(orgWrapper);
-        OrgAdmin orgAdmin = new OrgAdmin();
-        orgAdmin.setOrgId(editAdminInfoDto.getOrgId());
-        orgAdmin.setAdminId(editAdminInfoDto.getAdminId());
-        orgAdminService.save(orgAdmin);
+        orgAdminService.updateByAdminNum(editAdminInfoDto.getAdminNum(), editAdminInfoDto.getOrgId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void removeAdminInfoById(Integer adminId) {
-        if (adminId == null || adminId <= 0) {
-            throw new AppServiceException(ErrorCode.sys_admin_id_un_found);
+    public void removeAdminInfoById(String adminNum) {
+        if (adminNum == null) {
+            throw new AppServiceException(ErrorCode.sys_admin_num_not_null);
         }
-        AdminInfo adminInfo = adminInfoMapper.selectById(adminId);
-
+        AdminInfo adminInfo = getAdminInfoByAdminNum(adminNum);
         if (adminInfo == null) {
             throw new AppServiceException(ErrorCode.sys_admin_info_un_found);
         }
         if (Constants.ADMIN_LOGIN_NAME.equals(adminInfo.getLoginName())) {
             throw new AppServiceException(ErrorCode.sys_remove_admin_error);
         }
-        QueryWrapper<RoleAdmin> roleWrapper = new QueryWrapper<>();
-        roleWrapper.eq("admin_id", adminId);
         // 删除给用户分配的角色
-        roleAdminService.remove(roleWrapper);
+        roleAdminService.removeByAdminNum(adminNum);
         // 删除用户所在部门
-        QueryWrapper<OrgAdmin> orgWrapper = new QueryWrapper<>();
-        orgWrapper.eq("admin_id", adminId);
-        orgAdminService.remove(orgWrapper);
+        orgAdminService.removeByAdminNum(adminNum);
         // 不删除数据 修改用户状态为2
         AdminInfo entity = new AdminInfo();
-        entity.setAdminId(adminId);
+        entity.setAdminNum(adminInfo.getAdminNum());
         entity.setStatus(2);
-        adminInfoMapper.updateById(entity);
+        updateByAdminNum(entity);
     }
 
     @Override
-    public void editAdminInfoStatus(Integer adminId) {
-        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
-        if (adminId == null || adminId <= 0) {
-            throw new AppServiceException(ErrorCode.sys_admin_id_un_found);
+    public void editAdminInfoStatus(String adminNum) {
+        if (adminNum == null) {
+            throw new AppServiceException(ErrorCode.sys_admin_num_not_null);
         }
-        AdminInfo adminInfo = adminInfoMapper.selectById(adminId);
+        AdminInfo adminInfo = getAdminInfoByAdminNum(adminNum);
         if (adminInfo == null) {
             throw new AppServiceException(ErrorCode.sys_admin_info_un_found);
         }
@@ -171,10 +156,10 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         AdminInfo entity = new AdminInfo();
         Integer status = adminInfo.getStatus() == 0 ? 1 : 0;
         entity.setStatus(status);
-        entity.setAdminId(adminId);
-        entity.setEditUser(loginName);
+        entity.setAdminNum(adminNum);
+        entity.setEditUser(BaseContextUtils.get(Constants.ADMIN_NAME).toString());
         entity.setEditTime(new Date());
-        adminInfoMapper.updateById(entity);
+        updateByAdminNum(entity);
     }
 
     @Override
@@ -185,6 +170,20 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         wrapper.and(w -> w.ne("status", 2));
         AdminInfo adminInfo = adminInfoMapper.selectOne(wrapper);
         return adminInfo;
+    }
+
+    @Override
+    public AdminInfo getAdminInfoByAdminNum(String adminNum) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("admin_num", adminNum);
+        AdminInfo lastAdminInfo = adminInfoMapper.selectOne(wrapper);
+        return lastAdminInfo;
+    }
+
+    void updateByAdminNum(AdminInfo entity) {
+        UpdateWrapper wrapper = new UpdateWrapper();
+        wrapper.eq("admin_num", entity.getAdminNum());
+        adminInfoMapper.update(entity, wrapper);
     }
 
 }

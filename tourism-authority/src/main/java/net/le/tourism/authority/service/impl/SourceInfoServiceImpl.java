@@ -47,7 +47,7 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
     @Override
     public List<QuerySourceInfoVo> querySourceInfo(QuerySourceInfoDto querySourceInfoDto) {
         // 查询当前登录人的所有角色ID
-        Integer adminNum = Integer.parseInt(BaseContextUtils.get(Constants.ADMIN_NUM).toString());
+        String adminNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
         if (adminNum == null) {
             throw new AppServiceException(ErrorCode.sys_login_info_error);
         }
@@ -60,7 +60,8 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         if (sourceIds.size() == 0) {
             return new ArrayList<>();
         }
-        Integer parentId = -1;
+        SourceInfo sourceInfo = sourceInfoMapper.selectByParentId(0);
+        Integer parentId = sourceInfo.getSourceId();
         // 通过资源ID获取所有授权的资源信息
         List<QuerySourceInfoVo> sourceInfoList = sourceInfoMapper.querySourceInfoBatchSourceId(sourceIds);
 
@@ -86,12 +87,12 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
 
     @Override
     public void insertSourceInfo(InsertSourceInfoByRoleDto insertSourceInfoByRoleDto) {
-        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         SourceInfo entity = new SourceInfo();
         BeanUtils.copyProperties(insertSourceInfoByRoleDto, entity);
         entity.setStatus(0);
-        entity.setCreateUser(loginNum);
-        entity.setEditUser(loginNum);
+        entity.setCreateUser(loginName);
+        entity.setEditUser(loginName);
         sourceInfoMapper.insert(entity);
     }
 

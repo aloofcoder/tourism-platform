@@ -48,12 +48,12 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo> i
 
     @Override
     public void insertRoleInfo(InsertRoleInfoDto insertRoleInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         RoleInfo entity = new RoleInfo();
         BeanUtils.copyProperties(insertRoleInfoDto, entity);
         entity.setStatus(0);
-        entity.setCreateUser(loginNum);
-        entity.setEditUser(loginNum);
+        entity.setCreateUser(loginName);
+        entity.setEditUser(loginName);
         roleInfoMapper.insert(entity);
         Integer roleId = entity.getRoleId();
         roleSourceMapper.insertBatchRoleSource(roleId, insertRoleInfoDto.getSourceIds());
@@ -74,11 +74,11 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo> i
         }
         BeanUtils.copyProperties(editRoleInfoDto, entity);
         roleInfoMapper.updateById(entity);
-        // 删除原来分配的角色
+        // 删除原来分配的资源
         QueryWrapper<RoleSource> wrapper = new QueryWrapper<>();
         wrapper.eq("role_id", editRoleInfoDto.getRoleId());
         roleSourceMapper.delete(wrapper);
-        // 添加新角色
+        // 添加新的资源
         roleSourceMapper.insertBatchRoleSource(editRoleInfoDto.getRoleId(), editRoleInfoDto.getSourceIds());
     }
 

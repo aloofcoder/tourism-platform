@@ -5,10 +5,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import net.le.tourism.authority.common.exception.AppServiceException;
 import net.le.tourism.authority.common.exception.ErrorCode;
+import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.pojo.dto.EditAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
-import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.service.IAdminInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
  */
 @Api(tags = "用户管理")
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth/admin")
 public class AdminInfoController {
 
     @Autowired
@@ -59,18 +59,18 @@ public class AdminInfoController {
     }
 
     @ApiOperation(value = "禁用或启用管理员", notes = "")
-    @ApiImplicitParam(name = "adminId", value = "管理员Id", required = true, dataType = "Integer")
+    @ApiImplicitParam(name = "adminNum", value = "管理员编号", required = true, dataType = "Integer")
     @PutMapping("/status")
-    public CommonResult editAdminInfoStatus(@NotNull(message = "管理员ID不能为空") @RequestParam("adminId") Integer adminId) {
-        adminInfoService.editAdminInfoStatus(adminId);
+    public CommonResult editAdminInfoStatus(@NotNull(message = "管理员ID不能为空") @RequestParam("adminNum") String adminNum) {
+        adminInfoService.editAdminInfoStatus(adminNum);
         return new CommonResult();
     }
 
     @ApiOperation(value = "删除管理员信息", notes = "")
-    @ApiImplicitParam(name = "adminId", value = "管理员Id", required = true, dataType = "Integer")
+    @ApiImplicitParam(name = "adminNum", value = "管理员编号", required = true, dataType = "Integer")
     @DeleteMapping
-    public CommonResult removeAdminInfo(@NotNull(message = "管理员ID不能为空") @RequestParam("adminId") Integer adminId) {
-        adminInfoService.removeAdminInfoById(adminId);
+    public CommonResult removeAdminInfo(@NotNull(message = "管理员ID不能为空") @RequestParam("adminNum") String adminNum) {
+        adminInfoService.removeAdminInfoById(adminNum);
         return new CommonResult();
     }
 

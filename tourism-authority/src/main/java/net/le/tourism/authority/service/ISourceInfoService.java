@@ -26,4 +26,5 @@ public interface ISourceInfoService extends IService<SourceInfo> {
     void editSourceInfo(EditSourceInfoByRoleDto editSourceInfoByRoleDto);
 
     void removeSourceInfoById(Integer sourceId);
+
 }

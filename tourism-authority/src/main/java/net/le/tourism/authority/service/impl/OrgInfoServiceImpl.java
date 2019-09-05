@@ -58,15 +58,15 @@ public class OrgInfoServiceImpl extends ServiceImpl<OrgInfoMapper, OrgInfo> impl
 
     @Override
     public void insertOrgInfo(InsertOrgInfoDto insertOrgInfoDto) {
-        String loginNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
         if (insertOrgInfoDto == null || insertOrgInfoDto.getParentId() == null) {
             throw new AppServiceException(ErrorCode.sys_insert_org_error);
         }
         OrgInfo entity = new OrgInfo();
         BeanUtils.copyProperties(insertOrgInfoDto, entity);
         entity.setStatus(0);
-        entity.setCreateUser(loginNum);
-        entity.setEditUser(loginNum);
+        entity.setCreateUser(loginName);
+        entity.setEditUser(loginName);
         orgInfoMapper.insert(entity);
     }
 

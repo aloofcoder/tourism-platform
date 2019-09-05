@@ -23,7 +23,7 @@
         </foreach>
     </insert>
 
-    <select id="selectRoleIdByAdminNum" resultType="integer" parameterType="integer">
+    <select id="selectRoleIdByAdminNum" resultType="integer" parameterType="string">
         SELECT role_id FROM role_admin WHERE admin_num = #{adminNum}
     </select>
 

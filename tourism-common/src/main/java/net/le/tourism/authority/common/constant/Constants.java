@@ -31,11 +31,6 @@ public class Constants {
     public static final String COMMA = ",";
 
     /**
-     * 管理员ID
-     */
-    public static final String ADMIN_ID = "adminId";
-
-    /**
      * 管理员编号
      */
     public static final String ADMIN_NUM = "adminNum";

@@ -14,10 +14,9 @@ import net.le.tourism.authority.pojo.dto.AdminLoginInfo;
 import net.le.tourism.authority.pojo.dto.AuthTokenDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
+import net.le.tourism.authority.pojo.entity.RoleAdmin;
 import net.le.tourism.authority.pojo.vo.TokenVo;
-import net.le.tourism.authority.service.ILoginLogService;
-import net.le.tourism.authority.service.ILoginService;
-import net.le.tourism.authority.service.IOrgAdminService;
+import net.le.tourism.authority.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -25,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author hanle
@@ -48,6 +48,9 @@ public class LoginServiceImpl implements ILoginService {
     @Autowired
     private ILoginLogService loginLogService;
 
+    @Autowired
+    private IRoleAdminService roleAdminService;
+
     @Override
     public TokenVo login(AdminLoginInfo adminLoginInfo) {
         QueryWrapper<AdminInfo> queryWrapper = new QueryWrapper<>();
@@ -67,11 +70,17 @@ public class LoginServiceImpl implements ILoginService {
             throw new AppServiceException(ErrorCode.authority_login_info_error);
         }
         // 获取当前登录人所在组织及所拥有角色
-        OrgAdmin orgAdmin = orgAdminService.queryOrgAdminByAdminId(adminInfo.getAdminId());
+        OrgAdmin orgAdmin = orgAdminService.queryByAdminNum(adminInfo.getAdminNum());
         if (orgAdmin == null) {
-            loginLogService.addLoginLog(adminLoginInfo.getLoginNum(), 1, "账号信息异常");
+            loginLogService.addLoginLog(adminLoginInfo.getLoginNum(), 1, "账号信息异常, 当前账号暂无组织");
             throw new AppServiceException(ErrorCode.authority_login_Info_Invalid);
         }
+        List<Integer> roles = roleAdminService.queryByAdminNum(adminInfo.getAdminNum());
+        if (roles == null || roles.size() == 0) {
+            loginLogService.addLoginLog(adminLoginInfo.getLoginNum(), 1, "账号信息异常, 当前账号暂无角色");
+            throw new AppServiceException(ErrorCode.authority_login_Info_Invalid);
+        }
+
         // 登录成功添加登录日志
         loginLogService.addLoginLog(adminLoginInfo.getLoginNum(), 0, "登录成功");
         String token = TourismUtils.getToken();
@@ -81,7 +90,6 @@ public class LoginServiceImpl implements ILoginService {
         authTokenDto.setAdminNum(adminInfo.getAdminNum());
         authTokenDto.setAdminName(adminInfo.getAdminName());
         authTokenDto.setToken(token);
-        authTokenDto.setOrgId(orgAdmin.getOrgId());
         // 缓存登录token
         CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(authTokenDto), Constants.TOKEN_EXPIRE_TIME);
         HttpServletResponse response = ServletUtils.getResponse();
@@ -109,8 +117,7 @@ public class LoginServiceImpl implements ILoginService {
         }
         String adminNum = CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_NUM);
         String adminName = CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_NAME);
-        Integer orgId = Integer.parseInt(CacheUtils.hGet(redisTemplate, tokenKey, Constants.ADMIN_ORG));
-        if (StringUtils.isEmpty(adminName) || StringUtils.isEmpty(adminNum) || orgId == null) {
+        if (StringUtils.isEmpty(adminName) || StringUtils.isEmpty(adminNum)) {
             return null;
         }
         // 刷新token
@@ -118,7 +125,6 @@ public class LoginServiceImpl implements ILoginService {
         authTokenDto.setAdminNum(adminNum);
         authTokenDto.setAdminName(adminName);
         authTokenDto.setToken(token);
-        authTokenDto.setOrgId(orgId);
         CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(authTokenDto), Constants.TOKEN_EXPIRE_TIME);
         return authTokenDto;
     }

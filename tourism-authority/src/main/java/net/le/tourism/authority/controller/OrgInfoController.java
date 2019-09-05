@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Api(tags = "组织管理")
 @RestController
-@RequestMapping("/organization")
+@RequestMapping("/auth/org")
 public class OrgInfoController {
 
     @Autowired

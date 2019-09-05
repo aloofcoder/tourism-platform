@@ -19,4 +19,6 @@ import java.util.List;
 public interface SourceInfoMapper extends BaseMapper<SourceInfo> {
 
     List<QuerySourceInfoVo> querySourceInfoBatchSourceId(List<Integer> list);
+
+    SourceInfo selectByParentId(Integer parentId);
 }

@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
  */
 @Api(tags = "文件管理")
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/sys/file")
 public class FileInfoController {
 
     @Autowired

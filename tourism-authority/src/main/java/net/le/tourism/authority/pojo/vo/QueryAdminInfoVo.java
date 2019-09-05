@@ -22,9 +22,6 @@ public class QueryAdminInfoVo implements Serializable {
 
     private static final long serialVersionUID = 8697009806741008598L;
 
-    @ApiModelProperty(value = "管理员Id", name = "adminId", dataType = "Integer")
-    private Integer adminId;
-
     @ApiModelProperty(value = "管理员系统编号", name = "adminNum", dataType = "String")
     private String adminNum;
 

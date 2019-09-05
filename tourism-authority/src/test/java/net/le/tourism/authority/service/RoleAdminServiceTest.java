@@ -44,6 +44,6 @@ public class RoleAdminServiceTest {
         roleIds.add(1);
         roleIds.add(2);
         roleIds.add(3);
-        roleAdminService.insertRoleAdminByAdmin(1, roleIds);
+        roleAdminService.insertRoleAdminByAdmin("1", roleIds);
     }
 }
