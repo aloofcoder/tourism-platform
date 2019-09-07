@@ -79,7 +79,7 @@ public class WechatMPController {
     @ResponseBody
     @RequestMapping("/build_url")
     public String buildReqURL(@PathVariable("appid") String appid) {
-        String url = String.format("http://zajgph.natappfree.cc/mp/%s/login", appid);
+        String url = String.format("http://xkgiji.natappfree.cc/mp/%s/login", appid);
         String redirectURL = wxService.oauth2buildAuthorizationUrl(url, "snsapi_userinfo", "index");
         log.error("RedirectURL >>> " + redirectURL);
         return redirectURL;
