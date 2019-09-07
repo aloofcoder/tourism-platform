@@ -17,6 +17,7 @@
     <modules>
         <module>tourism-authority</module>
         <module>tourism-mp</module>
+        <module>tourism-common</module>
     </modules>
 
     <dependencies>
