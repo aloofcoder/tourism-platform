@@ -17,6 +17,7 @@ import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.OrgAdmin;
 import net.le.tourism.authority.pojo.vo.QueryAdminInfoVo;
+import net.le.tourism.authority.pojo.vo.QueryLoginAdminInfoVo;
 import net.le.tourism.authority.service.IAdminInfoService;
 import net.le.tourism.authority.service.IOrgAdminService;
 import net.le.tourism.authority.service.IRoleAdminService;
@@ -178,6 +179,18 @@ public class AdminInfoServiceImpl extends ServiceImpl<AdminInfoMapper, AdminInfo
         wrapper.eq("admin_num", adminNum);
         AdminInfo lastAdminInfo = adminInfoMapper.selectOne(wrapper);
         return lastAdminInfo;
+    }
+
+    @Override
+    public QueryLoginAdminInfoVo queryLoginAdminInfo() {
+        String adminNum = BaseContextUtils.get(Constants.ADMIN_NUM).toString();
+        AdminInfo adminInfo = getAdminInfoByAdminNum(adminNum);
+        if (adminInfo == null) {
+            throw new AppServiceException(ErrorCode.authority_login_Info_Invalid);
+        }
+        QueryLoginAdminInfoVo queryLoginAdminInfoVo = new QueryLoginAdminInfoVo();
+        BeanUtils.copyProperties(adminInfo, queryLoginAdminInfoVo);
+        return queryLoginAdminInfoVo;
     }
 
     void updateByAdminNum(AdminInfo entity) {

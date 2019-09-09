@@ -8,9 +8,12 @@ import net.le.tourism.authority.common.exception.ErrorCode;
 import net.le.tourism.authority.pojo.dto.EditSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.InsertSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
+import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.entity.RoleSource;
 import net.le.tourism.authority.pojo.entity.SourceInfo;
 import net.le.tourism.authority.pojo.vo.QuerySourceInfoVo;
+import net.le.tourism.authority.service.IAdminInfoService;
+import net.le.tourism.authority.service.IRoleInfoService;
 import net.le.tourism.authority.service.ISourceInfoService;
 import net.le.tourism.authority.mapper.RoleAdminMapper;
 import net.le.tourism.authority.mapper.RoleSourceMapper;
@@ -43,6 +46,12 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
 
     @Autowired
     private SourceInfoMapper sourceInfoMapper;
+
+    @Autowired
+    private IAdminInfoService adminInfoService;
+
+    @Autowired
+    private IRoleInfoService roleInfoService;
 
     @Override
     public List<QuerySourceInfoVo> querySourceInfo(QuerySourceInfoDto querySourceInfoDto) {

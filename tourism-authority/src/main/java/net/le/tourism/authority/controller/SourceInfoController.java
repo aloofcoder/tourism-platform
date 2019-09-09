@@ -36,12 +36,12 @@ public class SourceInfoController {
     private ISourceInfoService sourceInfoService;
 
     /**
-     * 查询当前登录人下的所有资源
+     * 查询所有资源
      *
      * @param querySourceInfoDto
      * @return
      */
-    @ApiOperation(value = "查询当前登陆人的所有授权资源", notes = "资源信息以树状返回")
+    @ApiOperation(value = "查询所有授权资源", notes = "资源信息以树状返回")
     @GetMapping
     public CommonResult querySourceInfo(QuerySourceInfoDto querySourceInfoDto) {
         List<QuerySourceInfoVo> sourceList = sourceInfoService.querySourceInfo(querySourceInfoDto);

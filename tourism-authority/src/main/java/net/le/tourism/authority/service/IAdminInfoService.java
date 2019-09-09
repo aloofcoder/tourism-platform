@@ -7,6 +7,7 @@ import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
 import net.le.tourism.authority.pojo.entity.AdminInfo;
 import net.le.tourism.authority.pojo.vo.QueryAdminInfoVo;
 import net.le.tourism.authority.common.result.PageResult;
+import net.le.tourism.authority.pojo.vo.QueryLoginAdminInfoVo;
 
 /**
  * <p>
@@ -31,4 +32,6 @@ public interface IAdminInfoService extends IService<AdminInfo> {
     void editAdminInfoStatus(String adminNum);
 
     AdminInfo getAdminInfoByAdminNum(String adminNum);
+
+    QueryLoginAdminInfoVo queryLoginAdminInfo();
 }

@@ -9,6 +9,7 @@ import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.pojo.dto.EditAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.InsertAdminInfoDto;
 import net.le.tourism.authority.pojo.dto.QueryAdminInfoDto;
+import net.le.tourism.authority.pojo.vo.QueryLoginAdminInfoVo;
 import net.le.tourism.authority.service.IAdminInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +73,13 @@ public class AdminInfoController {
     public CommonResult removeAdminInfo(@NotNull(message = "管理员ID不能为空") @RequestParam("adminNum") String adminNum) {
         adminInfoService.removeAdminInfoById(adminNum);
         return new CommonResult();
+    }
+
+    @ApiOperation(value = "获取当前登陆人信息")
+    @GetMapping("/info")
+    public CommonResult queryLoginAdminInfo() {
+        QueryLoginAdminInfoVo queryLoginAdminInfoVo = adminInfoService.queryLoginAdminInfo();
+        return new CommonResult(queryLoginAdminInfoVo);
     }
 
 }
