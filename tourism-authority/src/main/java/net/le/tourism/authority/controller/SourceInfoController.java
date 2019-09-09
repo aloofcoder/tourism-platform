@@ -3,11 +3,11 @@ package net.le.tourism.authority.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.pojo.dto.EditSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.InsertSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
 import net.le.tourism.authority.pojo.vo.QuerySourceInfoVo;
-import net.le.tourism.authority.common.result.CommonResult;
 import net.le.tourism.authority.service.ISourceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -78,8 +78,8 @@ public class SourceInfoController {
 
     @ApiOperation(value = "删除资源信息")
     @DeleteMapping
-    public CommonResult removeSourceInfoById(@RequestParam("id") @NotNull(message = "资源Id不能为空") @Min(value = 1, message = "资源Id必须大于0") Integer id) {
-        sourceInfoService.removeSourceInfoById(id);
+    public CommonResult removeSourceInfoBySourceId(@NotNull(message = "资源Id不能为空") @Min(value = 1, message = "资源Id必须大于0") @RequestParam("sourceId") Integer sourceId) {
+        sourceInfoService.removeSourceInfoBySourceId(sourceId);
         return new CommonResult();
     }
 }

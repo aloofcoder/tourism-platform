@@ -1,5 +1,4 @@
 package net.le.tourism.authority.service.impl;
-import	java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,8 +12,6 @@ import net.le.tourism.authority.mapper.SourceInfoMapper;
 import net.le.tourism.authority.pojo.dto.EditSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.InsertSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
-import net.le.tourism.authority.pojo.entity.AdminInfo;
-import net.le.tourism.authority.pojo.entity.RoleSource;
 import net.le.tourism.authority.pojo.entity.SourceInfo;
 import net.le.tourism.authority.pojo.vo.QuerySourceInfoVo;
 import net.le.tourism.authority.service.IAdminInfoService;
@@ -110,10 +107,11 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         roleSourceMapper.insertBatchRolesSource(insertSourceInfoByRoleDto.getRoleIds(), entity.getSourceId());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void removeSourceInfoById(Integer sourceId) {
+    public void removeSourceInfoBySourceId(Integer sourceId) {
         if (sourceId == null || sourceId <= 0) {
-            throw new AppServiceException(ErrorCode.sys_source_remove_error);
+            throw new AppServiceException(ErrorCode.sys_source_remove_error_id_invalid);
         }
         // 如果当前资源有子资源不能删除
         QueryWrapper<SourceInfo> wrapper = new QueryWrapper<>();
@@ -125,10 +123,7 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         // 如果当前资源已分配给角色 不能删除
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("source_id", sourceId);
-        List<RoleSource> roleSourceList = roleSourceMapper.selectList(queryWrapper);
-        if (roleSourceList.size() > 0) {
-            throw new AppServiceException(ErrorCode.sys_source_remove_error);
-        }
+        roleSourceMapper.delete(queryWrapper);
         sourceInfoMapper.deleteById(sourceId);
     }
 
