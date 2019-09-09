@@ -123,6 +123,7 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         sourceInfoMapper.deleteById(sourceId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void editSourceInfo(EditSourceInfoByRoleDto editSourceInfoByRoleDto) {
         String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
@@ -133,10 +134,9 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         sourceInfoMapper.updateById(entity);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("source_id", editSourceInfoByRoleDto.getSourceId());
-        List<RoleSource> roleSourceList = roleSourceMapper.selectList(queryWrapper);
-
-        // 获取新增的角色
-
-        // 获取需要删除的角色
+        // 删除原来的菜单分配
+        roleSourceMapper.delete(queryWrapper);
+        // 给角色授权资源
+        roleSourceMapper.insertBatchRolesSource(editSourceInfoByRoleDto.getRoleIds(), editSourceInfoByRoleDto.getSourceId());
     }
 }
