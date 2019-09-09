@@ -18,5 +18,5 @@ public class EditSourceInfoByRoleDto extends InsertSourceInfoByRoleDto {
 
     @NotNull(message = "资源Id不能为空")
     @Min(value = 1, message = "资源Id必须大于0")
-    private Integer id;
+    private Integer sourceId;
 }

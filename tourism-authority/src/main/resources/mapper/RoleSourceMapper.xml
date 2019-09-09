@@ -5,8 +5,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="net.le.tourism.authority.pojo.entity.RoleSource">
         <id column="id" property="id"/>
-        <result column="role_id" property="roleId" />
-        <result column="source_id" property="sourceId" />
+        <result column="role_id" property="roleId"/>
+        <result column="source_id" property="sourceId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -28,6 +28,15 @@
         VALUES
         <foreach collection="sourceIds" index="index" item="item" separator=",">
             (#{roleId}, #{item})
+        </foreach>
+    </insert>
+
+    <insert id="insertBatchRolesSource">
+        INSERT INTO role_source
+        (role_id, source_id)
+        VALUES
+        <foreach collection="roleIds" index="index" item="item" separator=",">
+            (#{item}, #{sourceId})
         </foreach>
     </insert>
 </mapper>

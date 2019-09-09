@@ -1,10 +1,15 @@
 package net.le.tourism.authority.service.impl;
+import	java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.le.tourism.authority.common.constant.Constants;
 import net.le.tourism.authority.common.exception.AppServiceException;
 import net.le.tourism.authority.common.exception.ErrorCode;
+import net.le.tourism.authority.common.util.BaseContextUtils;
+import net.le.tourism.authority.mapper.RoleAdminMapper;
+import net.le.tourism.authority.mapper.RoleSourceMapper;
+import net.le.tourism.authority.mapper.SourceInfoMapper;
 import net.le.tourism.authority.pojo.dto.EditSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.InsertSourceInfoByRoleDto;
 import net.le.tourism.authority.pojo.dto.QuerySourceInfoDto;
@@ -15,13 +20,10 @@ import net.le.tourism.authority.pojo.vo.QuerySourceInfoVo;
 import net.le.tourism.authority.service.IAdminInfoService;
 import net.le.tourism.authority.service.IRoleInfoService;
 import net.le.tourism.authority.service.ISourceInfoService;
-import net.le.tourism.authority.mapper.RoleAdminMapper;
-import net.le.tourism.authority.mapper.RoleSourceMapper;
-import net.le.tourism.authority.mapper.SourceInfoMapper;
-import net.le.tourism.authority.common.util.BaseContextUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,6 +96,7 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         return trees;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertSourceInfo(InsertSourceInfoByRoleDto insertSourceInfoByRoleDto) {
         String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
@@ -103,6 +106,8 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         entity.setCreateUser(loginName);
         entity.setEditUser(loginName);
         sourceInfoMapper.insert(entity);
+        // 将新增菜单授权给用户
+        roleSourceMapper.insertBatchRolesSource(insertSourceInfoByRoleDto.getRoleIds(), entity.getSourceId());
     }
 
     @Override
@@ -127,6 +132,7 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         sourceInfoMapper.deleteById(sourceId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void editSourceInfo(EditSourceInfoByRoleDto editSourceInfoByRoleDto) {
         String loginName = BaseContextUtils.get(Constants.ADMIN_NAME).toString();
@@ -135,5 +141,11 @@ public class SourceInfoServiceImpl extends ServiceImpl<SourceInfoMapper, SourceI
         entity.setEditUser(loginName);
         entity.setEditTime(new Date());
         sourceInfoMapper.updateById(entity);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("source_id", editSourceInfoByRoleDto.getSourceId());
+        // 删除原来的菜单分配
+        roleSourceMapper.delete(queryWrapper);
+        // 给角色授权资源
+        roleSourceMapper.insertBatchRolesSource(editSourceInfoByRoleDto.getRoleIds(), editSourceInfoByRoleDto.getSourceId());
     }
 }
