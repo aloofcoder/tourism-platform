@@ -1,21 +1,22 @@
 package net.le.tourism.authority.pojo.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author hanle
  * @version v1.0
  * @date 2019/6/29
- * @modify
- *
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * @modify 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 @Data
 @ToString
@@ -59,4 +60,9 @@ public class InsertSourceInfoByRoleDto implements Serializable {
      */
     @NotBlank(message = "资源标记不能为空")
     private String sourceMark;
+
+    @Valid
+    @NotNull(message = "角色不能为空")
+    @ApiModelProperty(name = "roleIds", value = "管理员角色Id集合", dataType = "List", required = true)
+    private List<@NotNull(message = "角色Id不能为空") @Min(value = 1, message = "角色Id必须大于0") Integer> roleIds;
 }

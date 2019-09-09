@@ -21,4 +21,6 @@ public interface RoleSourceMapper extends BaseMapper<RoleSource> {
     List<Integer> selectSourceIdsBatchRoleId(List<Integer> list);
 
     void insertBatchRoleSource(@Param("roleId") Integer roleId, @Param("sourceIds") List<Integer> sourceIds);
+
+    void insertBatchRolesSource(@Param("roleIds") List<Integer> roleIds, @Param("sourceId") Integer sourceId);
 }
