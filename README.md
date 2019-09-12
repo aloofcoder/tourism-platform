@@ -1,4 +1,4 @@
-# tourism_platform
+# tourism-platform
 通用权限系统
 
 ## swagger 文档
