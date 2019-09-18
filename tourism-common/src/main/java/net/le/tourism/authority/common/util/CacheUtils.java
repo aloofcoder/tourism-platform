@@ -82,6 +82,12 @@ public class CacheUtils {
         return value;
     }
 
+    /**
+     * 获取匹配的key
+     * @param redisTemplate
+     * @param pattern
+     * @return
+     */
     public static Set<String> keys(RedisTemplate redisTemplate, String pattern) {
         return redisTemplate.keys(pattern);
     }

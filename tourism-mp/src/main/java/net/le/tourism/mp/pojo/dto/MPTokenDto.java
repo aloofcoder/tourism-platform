@@ -18,9 +18,7 @@ public class MPTokenDto {
 
     private String openId;
 
-    private String accessToken;
-
-    private String refreshToken;
+    private String appId;
 
     private String token;
 }

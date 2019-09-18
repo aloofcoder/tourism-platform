@@ -7,7 +7,11 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import net.le.tourism.authority.common.util.CacheUtils;
 import net.le.tourism.authority.common.util.TourismUtils;
+import net.le.tourism.mp.mapper.UserMpInfoMapper;
+import net.le.tourism.mp.mapper.WechatUserInfoMapper;
 import net.le.tourism.mp.pojo.dto.MPTokenDto;
+import net.le.tourism.mp.pojo.entity.UserMpInfo;
+import net.le.tourism.mp.pojo.entity.WechatUserInfo;
 import net.le.tourism.mp.service.IWechatMpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -29,41 +33,26 @@ import java.util.Map;
 @AllArgsConstructor
 public class WechatMPServiceImpl implements IWechatMpService {
 
-    private final WxMpService wxService;
+    @Autowired
+    private UserMpInfoMapper userMpInfoMapper;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private WechatUserInfoMapper wechatUserInfoMapper;
 
     @Override
-    public MPTokenDto validateLogin(String token) {
-        String tokenKey = TourismUtils.buildMPTokenKey(token);
-        String openId = CacheUtils.hGet(redisTemplate, tokenKey, "openId");
-        String accessToken = CacheUtils.hGet(redisTemplate, tokenKey, "accessToken");
-        String refreshToken = CacheUtils.hGet(redisTemplate, tokenKey, "refreshToken");
-        if (openId == null || accessToken == null || refreshToken == null) {
-            return null;
-        }
-        MPTokenDto tokenDto = new MPTokenDto();
-        tokenDto.setOpenId(openId);
-        tokenDto.setAccessToken(accessToken);
-        tokenDto.setRefreshToken(refreshToken);
-        tokenDto.setToken(token);
-        // 刷新token
-        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = null;
-        try {
-            wxMpOAuth2AccessToken = wxService.oauth2refreshAccessToken(refreshToken);
-        } catch (WxErrorException e) {
-            log.error("刷新access_token 失败！");
-            e.printStackTrace();
-            return null;
-        }
-        MPTokenDto tokenModel = new MPTokenDto();
-        tokenModel.setOpenId(wxMpOAuth2AccessToken.getOpenId());
-        tokenModel.setAccessToken(wxMpOAuth2AccessToken.getAccessToken());
-        tokenModel.setRefreshToken(wxMpOAuth2AccessToken.getRefreshToken());
-        tokenModel.setToken(token);
-        Map<String, Object> tokenMap = BeanMap.create(tokenModel);
-        CacheUtils.hMSet(redisTemplate, tokenKey, tokenMap, wxMpOAuth2AccessToken.getExpiresIn());
-        return tokenDto;
+    public UserMpInfo getLoginStatus(String openId) {
+        UserMpInfo userMpInfo = userMpInfoMapper.selectByOpenId(openId);
+        return userMpInfo;
+    }
+
+    @Override
+    public WechatUserInfo getRegisterStatus(String openId) {
+        WechatUserInfo wechatUserInfo = wechatUserInfoMapper.selectByOpenId(openId);
+        return wechatUserInfo;
+    }
+
+    @Override
+    public void register(WechatUserInfo wechatUserInfo) {
+        wechatUserInfoMapper.insert(wechatUserInfo);
     }
 }

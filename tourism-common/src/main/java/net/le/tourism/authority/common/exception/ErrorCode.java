@@ -50,7 +50,12 @@ public enum ErrorCode {
     authority_login_user_un_register(40202, "登录失败，登录账号不存在！"),
     authority_login_info_error(40203, "登录失败，登录密码错误！"),
     authority_login_token_Invalid(40204, "登录已过期，请重新登录！"),
-    authority_login_Info_Invalid(40205, "登录账号信息有误，请联系管理员处理！"),;
+    authority_login_Info_Invalid(40205, "登录账号信息有误，请联系管理员处理！"),
+
+    // 微信模块
+    mp_get_access_token_error(50101, "获取微信access token失败！"),
+    mp_get_access_token_un_authority(50102, "获取用户信息失败，您当前为获取微信授权！"),
+    ;
 
     private Integer code;
 

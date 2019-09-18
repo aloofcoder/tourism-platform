@@ -1,6 +1,9 @@
 package net.le.tourism.mp.service;
 
 import net.le.tourism.mp.pojo.dto.MPTokenDto;
+import net.le.tourism.mp.pojo.entity.UserMpInfo;
+import net.le.tourism.mp.pojo.entity.WechatUserInfo;
+import net.le.tourism.mp.pojo.vo.TokenVo;
 
 /**
  * @author hanle
@@ -12,5 +15,23 @@ import net.le.tourism.mp.pojo.dto.MPTokenDto;
  */
 public interface IWechatMpService {
 
-    MPTokenDto validateLogin(String token);
+    /**
+     * 获取公众号登录状态
+     * @param openId
+     * @return
+     */
+    UserMpInfo getLoginStatus(String openId);
+
+    /**
+     * 获取绑定微信用户
+     * @param openId
+     * @return
+     */
+    WechatUserInfo getRegisterStatus(String openId);
+
+    /**
+     * 绑定微信用户
+     */
+
+    void register(WechatUserInfo wechatUserInfo);
 }

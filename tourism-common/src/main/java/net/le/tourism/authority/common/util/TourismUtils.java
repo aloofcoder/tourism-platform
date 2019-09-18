@@ -15,7 +15,7 @@ import java.util.UUID;
 public class TourismUtils {
 
     public static String getAdminTokenKey(String adminNum, String token) {
-        String tokenKey = String.format("%1$s:%2$s_%3$s",
+        String tokenKey = String.format("%1$s:%2$s:%3$s",
                 Constants.ADMIN_TOKEN_SUFFIX, adminNum, token);
         return tokenKey;
     }
@@ -56,7 +56,11 @@ public class TourismUtils {
 
 
     public static String buildMPTokenKey(String token) {
-        return String.format("%1$s_%2$s", Constants.MP_TOKEN_SUFFIX, token);
+        return String.format("%1$s:%2$s", Constants.MP_TOKEN_SUFFIX, token);
+    }
+
+    public static String buildMpAccessTokenKey(String appId, String token) {
+        return String.format("%1$s:%2$s:%3$s", Constants.MP_ACCESS_TOKEN_SUFFIX, appId, token);
     }
 
     /*

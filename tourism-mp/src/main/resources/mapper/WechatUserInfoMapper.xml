@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.le.tourism.mp.mapper.WechatUserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.le.tourism.mp.pojo.entity.WechatUserInfo">
+        <id column="wechat_user_id" property="wechatUserId" />
+        <result column="openid" property="openid" />
+        <result column="nickname" property="nickname" />
+        <result column="sex" property="sex" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="country" property="country" />
+        <result column="headimgurl" property="headimgurl" />
+        <result column="privilege" property="privilege" />
+        <result column="unionid" property="unionid" />
+        <result column="create_time" property="createTime" />
+        <result column="edit_time" property="editTime" />
+        <result column="create_user" property="createUser" />
+        <result column="edit_user" property="editUser" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        wechat_user_id, openid, nickname, sex, province, city, country, headimgurl, privilege, unionid, create_time, edit_time, create_user, edit_user
+    </sql>
+
+    <select id="selectByOpenId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM wechat_user_info WHERE openid = #{openId}
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package net.le.tourism.authority.common.configurate;
+package net.le.tourism.mp.configurate;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
  */
 @Configuration
-@MapperScan("net.le.tourism.authority.mapper")
+@MapperScan("net.le.tourism.mp.mapper")
 public class MybatisConfig {
 
     /**

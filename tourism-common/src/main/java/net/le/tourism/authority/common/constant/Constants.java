@@ -62,6 +62,8 @@ public class Constants {
      */
     public static final String MP_TOKEN_SUFFIX = "MP_TOKEN";
 
+    public static final String MP_ACCESS_TOKEN_SUFFIX = "MP_ACCESS_TOKEN";
+
     /**
      * openid key
      */
@@ -72,5 +74,5 @@ public class Constants {
     /**
      * token 失效时间
      */
-    public static final long TOKEN_EXPIRE_TIME = 7200;
+    public static final int TOKEN_EXPIRE_TIME = 7200;
 }

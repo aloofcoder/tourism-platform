@@ -1,0 +1,27 @@
+package net.le.tourism.mp.service;
+
+import net.le.tourism.mp.pojo.entity.WechatTokenInfo;
+
+/**
+ * @author hanle
+ * @version v1.0
+ * @date 2019/9/18
+ * @modify
+ * @copyright zhishoubao
+ * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ */
+public interface IWechatTokenInfoService {
+
+    /**
+     * 添加或更新access token
+     * @param wechatTokenInfo
+     */
+    void insertOrUpdateWechatTokenInfo(WechatTokenInfo wechatTokenInfo);
+
+    /**
+     * 通过appId获取access token
+     * @param appId
+     * @return
+     */
+    WechatTokenInfo selectByAppId(String appId);
+}
