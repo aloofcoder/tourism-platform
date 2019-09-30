@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh_cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+    <title>INDEX</title>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js">
+    </script>
+    <script th:inline="javascript" type="application/javascript">
+        var token = [[${token}]];
+        var appId = "wx10f0681bb417a814";
+        function getInfo() {
+            $.ajax({
+                headers: {
+                    TOKEN: token
+                },
+                type: "GET",
+                url: "/mp/wx10f0681bb417a814/getInfo",
+                success: function(res) {
+                    alert(JSON.stringify(res))
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>HELLO WORLD</h1>
+<button onclick="getInfo()">信息</button>
+</body>
+</html>

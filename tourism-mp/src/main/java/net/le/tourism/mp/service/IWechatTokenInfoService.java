@@ -1,27 +1,29 @@
 package net.le.tourism.mp.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import net.le.tourism.mp.pojo.entity.WechatTokenInfo;
 
 /**
- * @author hanle
- * @version v1.0
- * @date 2019/9/18
- * @modify
- * @copyright zhishoubao
- * 编程千万条, 规范第一条, 注释不规范, 接盘泪两行!
+ * <p>
+ * 服务类
+ * </p>
+ *
+ * @author 韩乐
+ * @since 2019-09-21
  */
-public interface IWechatTokenInfoService {
+public interface IWechatTokenInfoService extends IService<WechatTokenInfo> {
 
     /**
-     * 添加或更新access token
-     * @param wechatTokenInfo
-     */
-    void insertOrUpdateWechatTokenInfo(WechatTokenInfo wechatTokenInfo);
-
-    /**
-     * 通过appId获取access token
+     * 根据appId获取微信access token
+     *
      * @param appId
      * @return
      */
     WechatTokenInfo selectByAppId(String appId);
+
+    /**
+     * 添加或更新微信access token
+     * @param wechatTokenInfo
+     */
+    void insertOrUpdateWechatToken(WechatTokenInfo wechatTokenInfo);
 }

@@ -48,7 +48,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey(Constants.AUTHORITY_KEY, Constants.AUTHORITY_KEY, "header");
+        return new ApiKey(Constants.AUTH_KEY, Constants.AUTH_KEY, "header");
     }
 
     private SecurityContext securityContexts() {
@@ -63,7 +63,7 @@ public class SwaggerConfig {
         List<SecurityReference> referenceList = new ArrayList(1);
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
-        referenceList.add(new SecurityReference(Constants.AUTHORITY_KEY, authorizationScopes));
+        referenceList.add(new SecurityReference(Constants.AUTH_KEY, authorizationScopes));
         return referenceList;
     }
 

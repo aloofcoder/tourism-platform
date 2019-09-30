@@ -6,15 +6,14 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>
- * 保存微信公众号全局access_token  Mapper 接口
+ *  Mapper 接口
  * </p>
  *
  * @author 韩乐
- * @since 2019-09-18
+ * @since 2019-09-21
  */
 @Repository
 public interface WechatTokenInfoMapper extends BaseMapper<WechatTokenInfo> {
 
-    WechatTokenInfo selectByAppId(String appId);
-
+    void insertOrUpdate(WechatTokenInfo wechatTokenInfo);
 }

@@ -79,7 +79,7 @@ public class AdminInfoControllerTest {
         String requestJson = JSON.toJSONString(insertAdminInfoDto);
         String responseString = mockMvc.perform(post("/admins")
                 .contentType(MediaType.APPLICATION_JSON)
-                .cookie(new Cookie(Constants.AUTHORITY_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTM2NTY4MCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.3_CQeyoIIYbQ3sWxRQy1RQ3VaO4zXhcU3-MXg6mPNSk"))
+                .cookie(new Cookie(Constants.AUTH_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTM2NTY4MCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.3_CQeyoIIYbQ3sWxRQy1RQ3VaO4zXhcU3-MXg6mPNSk"))
                 .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ public class AdminInfoControllerTest {
         editAdminInfoDto.setOrgId(2);
         String requestJson = JSON.toJSONString(editAdminInfoDto);
         String responseString = mockMvc.perform(put("/admins")
-                .cookie(new Cookie(Constants.AUTHORITY_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTM2NTY4MCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.3_CQeyoIIYbQ3sWxRQy1RQ3VaO4zXhcU3-MXg6mPNSk"))
+                .cookie(new Cookie(Constants.AUTH_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTM2NTY4MCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.3_CQeyoIIYbQ3sWxRQy1RQ3VaO4zXhcU3-MXg6mPNSk"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andDo(print())

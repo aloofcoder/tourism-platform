@@ -48,6 +48,15 @@ public class AuthorityInterceptorAdapter extends HandlerInterceptorAdapter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 throw new AppServiceException(ErrorCode.authority_un_login);
             }
+            MPTokenDto tokenDto = wechatMpService.checkLogin(token);
+            if (tokenDto == null) {
+                log.error("当前未登录！");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                throw new AppServiceException(ErrorCode.authority_un_login);
+            }
+            BaseContextUtils.set(Constants.OPEN_ID_KEY, tokenDto.getOpenId());
+            BaseContextUtils.set(Constants.MP_TOKEN_KEY, tokenDto.getToken());
+            BaseContextUtils.set(Constants.APP_ID_KEY, tokenDto.getAppId());
         }
         return super.preHandle(request, response, handler);
     }

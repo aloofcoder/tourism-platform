@@ -4,22 +4,22 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="net.le.tourism.mp.pojo.entity.WechatTokenInfo">
-        <id column="token_id" property="tokenId" />
-        <result column="app_id" property="appId" />
-        <result column="access_token" property="accessToken" />
-        <result column="refresh_token" property="refreshToken" />
-        <result column="create_time" property="createTime" />
+        <id column="wechat_token_id" property="wechatTokenId"/>
+        <result column="app_id" property="appId"/>
+        <result column="access_token" property="accessToken"/>
+        <result column="refresh_token" property="refreshToken"/>
+        <result column="create_time" property="createTime"/>
+        <result column="edit_time" property="editTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        token_id, app_id, access_token, refresh_token, create_time
+        wechat_token_id, app_id, access_token, refresh_token, create_time, edit_time
     </sql>
 
-    <select id="selectByAppId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM wechat_token_info WHERE
-        app_id = #{appId}
-    </select>
+    <insert id="insertOrUpdate">
+        INSERT INTO wechat_token_info(app_id, access_token, refresh_token)
+        VALUES (#{appId}, #{accessToken}, #{refreshToken}) ON DUPLICATE KEY UPDATE access_token = #{accessToken}, refresh_token = #{refreshToken};
+    </insert>
 
 </mapper>

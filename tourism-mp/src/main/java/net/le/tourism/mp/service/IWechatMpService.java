@@ -1,5 +1,6 @@
 package net.le.tourism.mp.service;
 
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import net.le.tourism.mp.pojo.dto.MPTokenDto;
 import net.le.tourism.mp.pojo.entity.UserMpInfo;
 import net.le.tourism.mp.pojo.entity.WechatUserInfo;
@@ -15,6 +16,10 @@ import net.le.tourism.mp.pojo.vo.TokenVo;
  */
 public interface IWechatMpService {
 
+    String buildReqUrl(String appId);
+
+    TokenVo login(String code, String appId);
+
     /**
      * 获取公众号登录状态
      * @param openId
@@ -22,16 +27,7 @@ public interface IWechatMpService {
      */
     UserMpInfo getLoginStatus(String openId);
 
-    /**
-     * 获取绑定微信用户
-     * @param openId
-     * @return
-     */
-    WechatUserInfo getRegisterStatus(String openId);
+    MPTokenDto checkLogin(String token);
 
-    /**
-     * 绑定微信用户
-     */
-
-    void register(WechatUserInfo wechatUserInfo);
+    WxMpUser getWechatUserInfo();
 }

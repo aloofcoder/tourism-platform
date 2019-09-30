@@ -30,9 +30,10 @@ public class TourismUtils {
 
     public static String getRequestToken() {
         HttpServletRequest request = ServletUtils.getRequest();
-        String token = request.getHeader(Constants.AUTHORITY_KEY);
+        String token = request.getHeader(Constants.AUTH_KEY);
         return token;
     }
+
 
     /**
      * 构建管理员登录密码
@@ -59,8 +60,8 @@ public class TourismUtils {
         return String.format("%1$s:%2$s", Constants.MP_TOKEN_SUFFIX, token);
     }
 
-    public static String buildMpAccessTokenKey(String appId, String token) {
-        return String.format("%1$s:%2$s:%3$s", Constants.MP_ACCESS_TOKEN_SUFFIX, appId, token);
+    public static String buildMpAccessTokenKey(String appId) {
+        return String.format("%1$s:%2$s", Constants.MP_ACCESS_TOKEN_SUFFIX, appId);
     }
 
     /*

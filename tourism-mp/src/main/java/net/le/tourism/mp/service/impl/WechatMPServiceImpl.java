@@ -5,20 +5,26 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import net.le.tourism.authority.common.constant.Constants;
+import net.le.tourism.authority.common.exception.AppServiceException;
+import net.le.tourism.authority.common.exception.ErrorCode;
+import net.le.tourism.authority.common.util.BaseContextUtils;
 import net.le.tourism.authority.common.util.CacheUtils;
+import net.le.tourism.authority.common.util.CollectionUtils;
 import net.le.tourism.authority.common.util.TourismUtils;
 import net.le.tourism.mp.mapper.UserMpInfoMapper;
-import net.le.tourism.mp.mapper.WechatUserInfoMapper;
 import net.le.tourism.mp.pojo.dto.MPTokenDto;
+import net.le.tourism.mp.pojo.dto.WechatAccessTokenDto;
 import net.le.tourism.mp.pojo.entity.UserMpInfo;
-import net.le.tourism.mp.pojo.entity.WechatUserInfo;
+import net.le.tourism.mp.pojo.entity.WechatTokenInfo;
+import net.le.tourism.mp.pojo.vo.TokenVo;
 import net.le.tourism.mp.service.IWechatMpService;
+import net.le.tourism.mp.service.IWechatTokenInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanMap;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * @author hanle
@@ -33,11 +39,44 @@ import java.util.Map;
 @AllArgsConstructor
 public class WechatMPServiceImpl implements IWechatMpService {
 
+    private WxMpService wxService;
+
     @Autowired
     private UserMpInfoMapper userMpInfoMapper;
 
     @Autowired
-    private WechatUserInfoMapper wechatUserInfoMapper;
+    private IWechatTokenInfoService wechatTokenInfoService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public String buildReqUrl(String appId) {
+        String url = String.format("http://iatssi.natappfree.cc/mp/%s/index", appId);
+        String redirectURL = wxService.oauth2buildAuthorizationUrl(url, "snsapi_userinfo", "index");
+        log.error("RedirectURL >>> " + redirectURL);
+        return redirectURL;
+    }
+
+    @Override
+    public TokenVo login(String code, String appId) {
+        if (!this.wxService.switchover(appId)) {
+            throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appId));
+        }
+        String token = TourismUtils.getToken();
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = null;
+        try {
+            wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            log.error("获取access token 失败");
+            throw new AppServiceException(ErrorCode.mp_auth_error);
+        }
+        updateOauth2AccessToken(appId, wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getRefreshToken(), token, wxMpOAuth2AccessToken.getOpenId());
+        TokenVo tokenVo = new TokenVo();
+        tokenVo.setToken(token);
+        return tokenVo;
+    }
 
     @Override
     public UserMpInfo getLoginStatus(String openId) {
@@ -46,13 +85,98 @@ public class WechatMPServiceImpl implements IWechatMpService {
     }
 
     @Override
-    public WechatUserInfo getRegisterStatus(String openId) {
-        WechatUserInfo wechatUserInfo = wechatUserInfoMapper.selectByOpenId(openId);
-        return wechatUserInfo;
+    public MPTokenDto checkLogin(String token) {
+        String mpTokenKey = TourismUtils.buildMPTokenKey(token);
+        String openId = CacheUtils.hGet(redisTemplate, mpTokenKey, "openId");
+        String appId = CacheUtils.hGet(redisTemplate, mpTokenKey, "appId");
+        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(appId)) {
+            return null;
+        }
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = refreshOauth2AccessToken(appId);
+        if (wxMpOAuth2AccessToken == null) {
+            throw new AppServiceException(ErrorCode.mp_auth_error);
+        }
+        updateOauth2AccessToken(appId, wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getRefreshToken(), token, openId);
+        MPTokenDto mpTokenDto = new MPTokenDto();
+        mpTokenDto.setToken(openId);
+        mpTokenDto.setAppId(appId);
+        mpTokenDto.setOpenId(openId);
+        return mpTokenDto;
+    }
+
+    public WxMpOAuth2AccessToken refreshOauth2AccessToken(String appId) {
+        String mpAccessTokenKey = TourismUtils.buildMpAccessTokenKey(appId);
+        String refreshToken = CacheUtils.hGet(redisTemplate, mpAccessTokenKey, "refreshToken");
+        if (StringUtils.isEmpty(refreshToken)) {
+            WechatTokenInfo wechatTokenInfo = wechatTokenInfoService.selectByAppId(appId);
+            if (wechatTokenInfo != null) {
+                refreshToken = wechatTokenInfo.getRefreshToken();
+            }
+        }
+        if (StringUtils.isEmpty(refreshToken)) {
+            return null;
+        }
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = null;
+        try {
+            wxMpOAuth2AccessToken = wxService.oauth2refreshAccessToken(refreshToken);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            log.error("刷新access_token失败");
+        }
+        if (wxMpOAuth2AccessToken == null) {
+            return null;
+        }
+        return wxMpOAuth2AccessToken;
+    }
+
+    public void updateOauth2AccessToken(String appId, String accessToken, String refreshToken, String token, String openId) {
+        String mpTokenKey = TourismUtils.buildMPTokenKey(token);
+        String mpAccessTokenKey = TourismUtils.buildMpAccessTokenKey(appId);
+        WechatTokenInfo entity = new WechatTokenInfo();
+        entity.setAppId(appId);
+        entity.setAccessToken(accessToken);
+        entity.setRefreshToken(refreshToken);
+        wechatTokenInfoService.insertOrUpdateWechatToken(entity);
+        // 缓存access token
+        WechatAccessTokenDto wechatAccessTokenDto = new WechatAccessTokenDto();
+        wechatAccessTokenDto.setAccessToken(accessToken);
+        wechatAccessTokenDto.setRefreshToken(refreshToken);
+        wechatAccessTokenDto.setAppId(appId);
+        CacheUtils.hMSet(redisTemplate, mpAccessTokenKey, CollectionUtils.objectToMap(wechatAccessTokenDto), Constants.TOKEN_EXPIRE_TIME);
+        MPTokenDto mpTokenDto = new MPTokenDto();
+        mpTokenDto.setToken(token);
+        mpTokenDto.setAppId(appId);
+        mpTokenDto.setOpenId(openId);
+        CacheUtils.hMSet(redisTemplate, mpTokenKey, CollectionUtils.objectToMap(mpTokenDto), Constants.TOKEN_EXPIRE_TIME);
+    }
+
+    public String getOauth2AccessToken() {
+        String appId = BaseContextUtils.get(Constants.APP_ID_KEY).toString();
+        String mpAccessTokenKey = TourismUtils.buildMpAccessTokenKey(appId);
+        String accessToken = CacheUtils.hGet(redisTemplate, mpAccessTokenKey, "accessToken");
+        if (StringUtils.isEmpty(accessToken)) {
+            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = refreshOauth2AccessToken(appId);
+            if (wxMpOAuth2AccessToken == null) {
+                throw new AppServiceException(ErrorCode.mp_auth_error);
+            }
+            accessToken = wxMpOAuth2AccessToken.getAccessToken();
+        }
+        return accessToken;
     }
 
     @Override
-    public void register(WechatUserInfo wechatUserInfo) {
-        wechatUserInfoMapper.insert(wechatUserInfo);
+    public WxMpUser getWechatUserInfo() {
+        String openId = BaseContextUtils.get(Constants.OPEN_ID_KEY).toString();
+        String accessToken = getOauth2AccessToken();
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
+        wxMpOAuth2AccessToken.setAccessToken(accessToken);
+        wxMpOAuth2AccessToken.setOpenId(openId);
+        WxMpUser wxMpUser = null;
+        try {
+            wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return wxMpUser;
     }
 }

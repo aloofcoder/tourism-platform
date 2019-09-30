@@ -21,6 +21,9 @@ public class TokenVo {
     @ApiModelProperty(value = "登录token", notes = "用户未登录时token为空", name = "token", dataType = "string")
     private String token;
 
-    @ApiModelProperty(value = "登录状态", notes = "0 未登录 1 已登录", name = "loginStatus", dataType = "string", required = true)
-    private Integer loginStatus;
+    @ApiModelProperty(value = "账号状态", notes = "0 未登录 1 已登录", name = "accountStatus", dataType = "integer", required = true)
+    private Integer accountStatus;
+
+    @ApiModelProperty(value = "用户openId", name = "openId", dataType = "string", required = true)
+    private String openId;
 }

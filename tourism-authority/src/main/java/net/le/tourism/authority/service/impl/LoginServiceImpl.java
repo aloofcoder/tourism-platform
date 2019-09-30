@@ -93,7 +93,7 @@ public class LoginServiceImpl implements ILoginService {
         // 缓存登录token
         CacheUtils.hMSet(redisTemplate, tokenKey, BeanMap.create(authTokenDto), Constants.TOKEN_EXPIRE_TIME);
         HttpServletResponse response = ServletUtils.getResponse();
-        response.addHeader(Constants.AUTHORITY_KEY, token);
+        response.addHeader(Constants.AUTH_KEY, token);
         TokenVo tokenVo = new TokenVo();
         tokenVo.setAdminName(adminInfo.getAdminName());
         tokenVo.setToken(token);

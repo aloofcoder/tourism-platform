@@ -5,17 +5,19 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 保存微信公众号全局access_token 
+ * 
  * </p>
  *
  * @author 韩乐
- * @since 2019-09-18
+ * @since 2019-09-21
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,8 +26,8 @@ public class WechatTokenInfo extends Model<WechatTokenInfo> {
 
 private static final long serialVersionUID=1L;
 
-    @TableId(value = "token_id", type = IdType.AUTO)
-    private Integer tokenId;
+    @TableId(value = "wechat_token_id", type = IdType.AUTO)
+    private Integer wechatTokenId;
 
     private String appId;
 
@@ -33,12 +35,14 @@ private static final long serialVersionUID=1L;
 
     private String refreshToken;
 
-    private LocalDateTime createTime;
+    private Date createTime;
+
+    private Date editTime;
 
 
     @Override
     protected Serializable pkVal() {
-        return this.tokenId;
+        return this.wechatTokenId;
     }
 
 }

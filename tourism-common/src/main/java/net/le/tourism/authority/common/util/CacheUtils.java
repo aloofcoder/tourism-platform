@@ -61,11 +61,11 @@ public class CacheUtils {
      *
      * @param redisTemplate
      * @param key
-     * @param value
+     * @param map
      * @param second
      */
-    public static void hMSet(RedisTemplate redisTemplate, String key, Map<String, Object> value, long second) {
-        redisTemplate.opsForHash().putAll(key, value);
+    public static void hMSet(RedisTemplate redisTemplate, String key, Map<String, Object> map, long second) {
+        redisTemplate.opsForHash().putAll(key, map);
         redisTemplate.expire(key, second, TimeUnit.SECONDS);
     }
 
@@ -78,12 +78,25 @@ public class CacheUtils {
      * @return
      */
     public static String hGet(RedisTemplate redisTemplate, String key, String name) {
-        String value = redisTemplate.opsForHash().get(key, name).toString();
+        String value = redisTemplate.opsForHash().get(key, name) == null ? null : redisTemplate.opsForHash().get(key, name).toString();
         return value;
     }
 
     /**
+     * 获取hash所有值
+     *
+     * @param redisTemplate
+     * @param key
+     * @return
+     */
+    public static Map<String, Object> hGetAll(RedisTemplate redisTemplate, String key) {
+        Map<String, Object> map = redisTemplate.opsForHash().entries(key);
+        return map;
+    }
+
+    /**
      * 获取匹配的key
+     *
      * @param redisTemplate
      * @param pattern
      * @return

@@ -7,7 +7,6 @@
         <id column="id" property="id" />
         <result column="staff_id" property="staffId" />
         <result column="openid" property="openid" />
-        <result column="token" property="token" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="edit_time" property="editTime" />
@@ -17,12 +16,12 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, staff_id, openid, token, status, create_time, edit_time, create_user, edit_user
+        id, staff_id, openid, status, create_time, edit_time, create_user, edit_user
     </sql>
 
     <select id="selectByOpenId" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM user_mp_info
-        WHERE openid = #{openId} AND token IS NOT NULL
+        WHERE openid = #{openId} AND status = 0
     </select>
 </mapper>

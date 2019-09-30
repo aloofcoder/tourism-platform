@@ -13,7 +13,7 @@ public class Constants {
     /**
      * 登录cookie key
      */
-    public static final String AUTHORITY_KEY = "Authorization";
+    public static final String AUTH_KEY = "TOKEN";
 
     /**
      * 管理员登录Token redis前缀
@@ -68,6 +68,10 @@ public class Constants {
      * openid key
      */
     public static final String OPEN_ID_KEY = "openId";
+
+    public static final String APP_ID_KEY = "appId";
+
+    public static final String MP_TOKEN_KEY = "token";
 
     public static final String MP_TOKEN = "accessToken";
 

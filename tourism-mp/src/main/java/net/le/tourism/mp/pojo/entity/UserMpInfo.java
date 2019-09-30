@@ -40,11 +40,6 @@ private static final long serialVersionUID=1L;
     private String openid;
 
     /**
-     * 登录token
-     */
-    private String token;
-
-    /**
      * 0有效1删除
      */
     private Integer status;

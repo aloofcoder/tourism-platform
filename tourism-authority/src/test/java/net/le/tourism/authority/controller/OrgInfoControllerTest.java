@@ -71,7 +71,7 @@ public class OrgInfoControllerTest {
         String requestJson = JSON.toJSONString(insertOrgInfoDto);
         String responseStr = mockMvc
                 .perform(post("/organizations")
-                        .cookie(new Cookie(Constants.AUTHORITY_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTUxMzA0NCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.vcKEiazeDKZJDnwDW1QO8H5Wwl6bP-ErNUXHY94rnIU"))
+                        .cookie(new Cookie(Constants.AUTH_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTUxMzA0NCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.vcKEiazeDKZJDnwDW1QO8H5Wwl6bP-ErNUXHY94rnIU"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andDo(print())
@@ -89,7 +89,7 @@ public class OrgInfoControllerTest {
         String responseStr = mockMvc.
                 perform(get("/organizations")
                         .params(param)
-                        .cookie(new Cookie(Constants.AUTHORITY_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTUxMzA0NCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.vcKEiazeDKZJDnwDW1QO8H5Wwl6bP-ErNUXHY94rnIU")))
+                        .cookie(new Cookie(Constants.AUTH_KEY, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbk5hbWUiOiJhZG1pbiIsInRpbWVTdGFtcCI6MTU2MTUxMzA0NCwiaXNzIjoic2VydmljZSIsImFkbWluSWQiOjF9.vcKEiazeDKZJDnwDW1QO8H5Wwl6bP-ErNUXHY94rnIU")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn()
