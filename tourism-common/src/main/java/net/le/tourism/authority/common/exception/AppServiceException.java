@@ -45,4 +45,10 @@ public class AppServiceException extends RuntimeException {
         this.errorCode = errorCode.getCode();
         this.message = errorCode.getMsg();
     }
+
+    public AppServiceException(Integer errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+        this.message = message;
+    }
 }

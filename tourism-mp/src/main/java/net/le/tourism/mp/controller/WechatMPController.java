@@ -3,15 +3,15 @@ package net.le.tourism.mp.controller;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import net.le.tourism.authority.common.annotation.IgnoreToken;
+import net.le.tourism.authority.common.exception.AppServiceException;
+import net.le.tourism.authority.common.exception.ErrorCode;
 import net.le.tourism.mp.pojo.vo.TokenVo;
 import net.le.tourism.mp.service.IWechatMpService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hanle
@@ -32,21 +32,16 @@ public class WechatMPController {
     @IgnoreToken
     @ResponseBody
     @RequestMapping("/build_url")
-    public String buildReqURL(@PathVariable("appid") String appid) {
-        return wechatMpService.buildReqUrl(appid);
+    public String buildReqURL(@RequestParam("url") String url) {
+        return wechatMpService.buildReqUrl(url);
     }
 
     @IgnoreToken
-    @RequestMapping("/index")
-    public String login(@PathVariable("appid") String appid, @RequestParam String code, Model model) {
-        TokenVo tokenVo = wechatMpService.login(code, appid);
-        model.addAttribute("token", tokenVo.getToken());
-        return "index";
-    }
-
-    @ResponseBody
-    @RequestMapping("/getInfo")
-    public WxMpUser getInfo() {
-        return wechatMpService.getWechatUserInfo();
+    @GetMapping("/auth")
+    public TokenVo login(@PathVariable("appid") String appid, String code) {
+        if (StringUtils.isEmpty(code)) {
+            throw new AppServiceException(ErrorCode.mp_auth_error);
+        }
+        return wechatMpService.login(code, appid);
     }
 }

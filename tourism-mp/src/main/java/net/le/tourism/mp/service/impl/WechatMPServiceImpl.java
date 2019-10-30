@@ -1,6 +1,5 @@
 package net.le.tourism.mp.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -36,9 +35,9 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@AllArgsConstructor
 public class WechatMPServiceImpl implements IWechatMpService {
 
+    @Autowired
     private WxMpService wxService;
 
     @Autowired
@@ -51,19 +50,17 @@ public class WechatMPServiceImpl implements IWechatMpService {
     private RedisTemplate redisTemplate;
 
     @Override
-    public String buildReqUrl(String appId) {
-        String url = String.format("http://iatssi.natappfree.cc/mp/%s/index", appId);
+    public String buildReqUrl(String url) {
         String redirectURL = wxService.oauth2buildAuthorizationUrl(url, "snsapi_userinfo", "index");
-        log.error("RedirectURL >>> " + redirectURL);
         return redirectURL;
     }
 
     @Override
     public TokenVo login(String code, String appId) {
         if (!this.wxService.switchover(appId)) {
-            throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appId));
+            throw new AppServiceException(ErrorCode.mp_auth_error.getCode(), String.format("未找到对应appid=[%s]的配置，请核实！", appId));
         }
-        String token = TourismUtils.getToken();
+        // 获取微信access token
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = null;
         try {
             wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
@@ -72,7 +69,15 @@ public class WechatMPServiceImpl implements IWechatMpService {
             log.error("获取access token 失败");
             throw new AppServiceException(ErrorCode.mp_auth_error);
         }
-        updateOauth2AccessToken(appId, wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getRefreshToken(), token, wxMpOAuth2AccessToken.getOpenId());
+        updateOauth2AccessToken(appId, wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getRefreshToken());
+        // 缓存用户信息
+        String token = TourismUtils.getToken();
+        String mpTokenKey = TourismUtils.buildMPTokenKey(token);
+        MPTokenDto mpTokenDto = new MPTokenDto();
+        mpTokenDto.setToken(token);
+        mpTokenDto.setAppId(appId);
+        mpTokenDto.setOpenId(wxMpOAuth2AccessToken.getOpenId());
+        CacheUtils.hMSet(redisTemplate, mpTokenKey, CollectionUtils.objectToMap(mpTokenDto), Constants.TOKEN_EXPIRE_TIME);
         TokenVo tokenVo = new TokenVo();
         tokenVo.setToken(token);
         return tokenVo;
@@ -89,18 +94,15 @@ public class WechatMPServiceImpl implements IWechatMpService {
         String mpTokenKey = TourismUtils.buildMPTokenKey(token);
         String openId = CacheUtils.hGet(redisTemplate, mpTokenKey, "openId");
         String appId = CacheUtils.hGet(redisTemplate, mpTokenKey, "appId");
-        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(appId)) {
+        if (openId == null) {
             return null;
         }
-        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = refreshOauth2AccessToken(appId);
-        if (wxMpOAuth2AccessToken == null) {
-            throw new AppServiceException(ErrorCode.mp_auth_error);
-        }
-        updateOauth2AccessToken(appId, wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getRefreshToken(), token, openId);
         MPTokenDto mpTokenDto = new MPTokenDto();
-        mpTokenDto.setToken(openId);
+        mpTokenDto.setToken(token);
         mpTokenDto.setAppId(appId);
         mpTokenDto.setOpenId(openId);
+        // 刷新用户token
+        CacheUtils.hMSet(redisTemplate, mpTokenKey, CollectionUtils.objectToMap(mpTokenDto), Constants.TOKEN_EXPIRE_TIME);
         return mpTokenDto;
     }
 
@@ -109,12 +111,10 @@ public class WechatMPServiceImpl implements IWechatMpService {
         String refreshToken = CacheUtils.hGet(redisTemplate, mpAccessTokenKey, "refreshToken");
         if (StringUtils.isEmpty(refreshToken)) {
             WechatTokenInfo wechatTokenInfo = wechatTokenInfoService.selectByAppId(appId);
-            if (wechatTokenInfo != null) {
-                refreshToken = wechatTokenInfo.getRefreshToken();
+            if (wechatTokenInfo == null) {
+                return null;
             }
-        }
-        if (StringUtils.isEmpty(refreshToken)) {
-            return null;
+            refreshToken = wechatTokenInfo.getRefreshToken();
         }
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = null;
         try {
@@ -129,39 +129,34 @@ public class WechatMPServiceImpl implements IWechatMpService {
         return wxMpOAuth2AccessToken;
     }
 
-    public void updateOauth2AccessToken(String appId, String accessToken, String refreshToken, String token, String openId) {
-        String mpTokenKey = TourismUtils.buildMPTokenKey(token);
-        String mpAccessTokenKey = TourismUtils.buildMpAccessTokenKey(appId);
+    public void updateOauth2AccessToken(String appId, String accessToken, String refreshToken) {
         WechatTokenInfo entity = new WechatTokenInfo();
         entity.setAppId(appId);
         entity.setAccessToken(accessToken);
         entity.setRefreshToken(refreshToken);
         wechatTokenInfoService.insertOrUpdateWechatToken(entity);
-        // 缓存access token
-        WechatAccessTokenDto wechatAccessTokenDto = new WechatAccessTokenDto();
-        wechatAccessTokenDto.setAccessToken(accessToken);
-        wechatAccessTokenDto.setRefreshToken(refreshToken);
-        wechatAccessTokenDto.setAppId(appId);
-        CacheUtils.hMSet(redisTemplate, mpAccessTokenKey, CollectionUtils.objectToMap(wechatAccessTokenDto), Constants.TOKEN_EXPIRE_TIME);
-        MPTokenDto mpTokenDto = new MPTokenDto();
-        mpTokenDto.setToken(token);
-        mpTokenDto.setAppId(appId);
-        mpTokenDto.setOpenId(openId);
-        CacheUtils.hMSet(redisTemplate, mpTokenKey, CollectionUtils.objectToMap(mpTokenDto), Constants.TOKEN_EXPIRE_TIME);
     }
 
     public String getOauth2AccessToken() {
         String appId = BaseContextUtils.get(Constants.APP_ID_KEY).toString();
-        String mpAccessTokenKey = TourismUtils.buildMpAccessTokenKey(appId);
-        String accessToken = CacheUtils.hGet(redisTemplate, mpAccessTokenKey, "accessToken");
-        if (StringUtils.isEmpty(accessToken)) {
-            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = refreshOauth2AccessToken(appId);
-            if (wxMpOAuth2AccessToken == null) {
-                throw new AppServiceException(ErrorCode.mp_auth_error);
-            }
-            accessToken = wxMpOAuth2AccessToken.getAccessToken();
+        String openId = BaseContextUtils.get(Constants.OPEN_ID_KEY).toString();
+        WechatTokenInfo wechatTokenInfo = wechatTokenInfoService.selectByAppId(appId);
+        if (wechatTokenInfo == null) {
+            return null;
         }
-        return accessToken;
+        String accessToken = wechatTokenInfo.getAccessToken();
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
+        wxMpOAuth2AccessToken.setAccessToken(accessToken);
+        wxMpOAuth2AccessToken.setOpenId(openId);
+        boolean isValid = wxService.oauth2validateAccessToken(wxMpOAuth2AccessToken);
+        if (isValid) {
+            return accessToken;
+        }
+        wxMpOAuth2AccessToken = refreshOauth2AccessToken(appId);
+        if (wxMpOAuth2AccessToken == null) {
+            return null;
+        }
+        return wxMpOAuth2AccessToken.getAccessToken();
     }
 
     @Override

@@ -16,7 +16,7 @@ import net.le.tourism.mp.pojo.vo.TokenVo;
  */
 public interface IWechatMpService {
 
-    String buildReqUrl(String appId);
+    String buildReqUrl(String url);
 
     TokenVo login(String code, String appId);
 

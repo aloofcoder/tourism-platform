@@ -55,7 +55,7 @@ public enum ErrorCode {
     // 微信模块
     mp_get_access_token_error(50101, "获取微信access token失败！"),
     mp_get_access_token_un_authority(50102, "获取用户信息失败，您当前为获取微信授权！"),
-    mp_auth_error(50103, "微信授权失败，请刷新重试！"),
+    mp_auth_error(50103, "微信授权失败，请重试！"),
     ;
 
     private Integer code;
